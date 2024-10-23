@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL & ~E_STRICT);
 $is_auth = rand(0, 1);
 $user_avatar = 'https://images.unsplash.com/photo-1729512680463-bc583c395b61?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
 $user_name = 'Tatiana'; // укажите здесь ваше имя
