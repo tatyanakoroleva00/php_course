@@ -1,11 +1,15 @@
 <?php
-//
+
 //function include_template($arg1, $arg2) {
 //    if(isset($arg1)) {
 //        require_once "$arg1";
-//        ob_start();
-//        print($arg1);
-//        return ob_get_clean();
+//
+//        $page
+//
+//
+//
+//
+////        print($arg1);
 //    }
 //    else return '';
 //};
