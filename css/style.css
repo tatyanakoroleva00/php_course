@@ -841,7 +841,7 @@ main.container {
 }
 
 .form__error {
-  display: none;
+  /*display: none;*/
   font-size: 11px;
   color: #f84646;
 }

@@ -49,20 +49,22 @@
     </header>
 
     <main class="container">
-        <?php include 'templates/index.php'?>
+        <?=$content ?>
+
     </main>
 </div>
 
 <footer class="main-footer">
     <nav class="nav">
         <ul class="nav__list container">
-            <?php while ($i < count($categories)) : ?>
+            <?php
+            $i = 0;
+            while ($i < count($categories)) : ?>
                 <li class="nav__item">
                     <a href="pages/all-lots.html"><?php echo $categories[$i] ?></a>
                 </li>
                 <?php $i++; ?>
             <?php endwhile ?>
-
 
             <!--заполните этот список из массива категорий-->
 

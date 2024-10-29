@@ -1,28 +1,30 @@
 <?php
 
-//function include_template($arg1, $arg2) {
-//    if(isset($arg1)) {
-//        require_once "$arg1";
-//
-//        $page
-//
-//
-//
-//
-////        print($arg1);
-//    }
-//    else return '';
-//};
+function include_template($name, array $data = [])
+{
+    $name = 'templates/' . $name;
+    $result = '';
 
-//$page_content = render_template('templates/index.php', [
-//    'categories' => $categories,
-//    'lots_list' => $lots_list
-//]);
-//$layout_content = render_template('templates/layout.php', [
-//    'content' => $content,
-//    'user_name' => $user_name,
-//    'title' => $title,
-//    'user_avatar' => $user_avatar
-//]);
-//
-//print($layout_content);
+    if (!is_readable($name)) {
+        return $result;
+    }
+
+    ob_start();
+    extract($data);
+    require $name;
+
+    $result = ob_get_clean();
+
+    return $result;
+}
+
+function formattedData($date) {
+    date_default_timezone_set('Europe/Moscow');
+    $cur_time = time();
+    $finish_date = strtotime('tomorrow midnight');
+    $left_time_in_seconds = $finish_date - $cur_time;
+    $hours = floor($left_time_in_seconds / 3600);
+    $minutes = floor(($left_time_in_seconds % 3600) / 60);
+//    print("{$hours}Ч : {$minutes}М");
+    return("{$hours}Ч : {$minutes}М");
+}
