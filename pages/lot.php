@@ -2,12 +2,39 @@
 
 require_once '../lots_list.php';
 
+
 if (isset($_GET)) {
     $lot_name = $lots_list[$_GET['id']]['name'];
     $lot_category = $lots_list[$_GET['id']]['category'];
     $lot_price = $lots_list[$_GET['id']]['price'];
     $lot_url = $lots_list[$_GET['id']]['img_url'];
+
+    $id = floor($_GET['id']);
+    $lot = "lot";
+    $lot_value = json_encode($id);
+    $expire = strtotime("+30 days");
+    $path = "/";
+
+    $ids = [];
+    if(isset($_COOKIE['lot'])) {
+        $decodedArr = json_decode($_COOKIE['lot']);
+
+        if(!in_array($decodedArr, $id)) {
+            array_push($decodedArr, $id);
+            $encodedArr = json_encode($decodedArr);
+            setcookie($lot, $encodedArr, $expire, $path);
+        }
+    } else {
+//
+        array_push($ids, $lot_value);
+        $encodedArr = json_encode($ids);
+        setcookie($lot, $encodedArr, $expire, $path);
+    }
+
+
+    var_dump($_COOKIE);
 }
+
 
 ?>
 
