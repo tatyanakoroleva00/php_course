@@ -1,5 +1,4 @@
 <?php
-//require_once '.'
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $textareaContent = isset($_POST['message']) ? $_POST['message'] : '';
 }
