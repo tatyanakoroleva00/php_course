@@ -46,10 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
     }
 
-    print_r($page_content);
+
+} else {
+    $page_content = include_template('addlotform.php', []);
 }
 
 
-
+print_r($page_content);
 
 
