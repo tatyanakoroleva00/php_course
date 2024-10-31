@@ -75,7 +75,7 @@ if (isset($_GET)) {
             <section class="lots">
                 <h2>История просмотров</h2>
 
-
+                <?php if(isset($_COOKIE['ids'])) : ?>
                 <ul class="lots__list">
                     <?php foreach ($lots_list as $index => $item) {
                         if (in_array($index, $viewed_lots_ids)) : ?>
@@ -102,6 +102,8 @@ if (isset($_GET)) {
                     <?php endif; }?>
 
                 </ul>
+
+                <?php endif;?>
             </section>
             <ul class="pagination-list">
                 <li class="pagination-item pagination-item-prev"><a>Назад</a></li>
