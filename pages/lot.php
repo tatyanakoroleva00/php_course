@@ -2,39 +2,45 @@
 
 require_once '../lots_list.php';
 
-
 if (isset($_GET)) {
     $lot_name = $lots_list[$_GET['id']]['name'];
     $lot_category = $lots_list[$_GET['id']]['category'];
     $lot_price = $lots_list[$_GET['id']]['price'];
     $lot_url = $lots_list[$_GET['id']]['img_url'];
-
-    $id = floor($_GET['id']);
-    $lot = "lot";
-    $lot_value = json_encode($id);
-    $expire = strtotime("+30 days");
-    $path = "/";
-
-    $ids = [];
-    if(isset($_COOKIE['lot'])) {
-        $decodedArr = json_decode($_COOKIE['lot']);
-
-        if(!in_array($decodedArr, $id)) {
-            array_push($decodedArr, $id);
-            $encodedArr = json_encode($decodedArr);
-            setcookie($lot, $encodedArr, $expire, $path);
-        }
-    } else {
-//
-        array_push($ids, $lot_value);
-        $encodedArr = json_encode($ids);
-        setcookie($lot, $encodedArr, $expire, $path);
-    }
-
-
-    var_dump($_COOKIE);
 }
 
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+
+    // Инициализируем массив ids
+    $ids = [];
+
+    // Проверяем, существуют ли уже данные в COOKIE
+    if (isset($_COOKIE['ids'])) {
+        // Получаем текущие сохраненные id из COOKIE и преобразуем их в массив
+        $ids = explode(',', $_COOKIE['ids']);
+    }
+
+    // Проверяем, есть ли id в массиве
+    if (!in_array($id, $ids)) {
+        // Если id нет в массиве, добавляем его
+        $ids[] = $id;
+
+        // Обновляем COOKIE с новым списком id
+        setcookie('ids', implode(',', $ids), time() + 3600, '/'); // COOKIE будет действительна 1 час
+
+        echo "ID добавлен в COOKIE.";
+    } else {
+        echo "ID уже существует в COOKIE.";
+    }
+
+    print_r($_COOKIE);
+    //Стереть Cookies
+//    setcookie('ids', implode(',', $ids), time() - 3600, '/'); // COOKIE будет действительна 1 час
+
+} else {
+    echo "ID не найден.";
+}
 
 ?>
 
@@ -52,7 +58,7 @@ if (isset($_GET)) {
     $id = $_GET['id'];
 
     $indexArr = [];
-    foreach($lots_list as $key => $value) {
+    foreach ($lots_list as $key => $value) {
         array_push($indexArr, $key);
     }
     if (in_array($id, $indexArr)) { ?>
@@ -63,7 +69,8 @@ if (isset($_GET)) {
                     <a class="main-header__logo" href="index.html">
                         <img src="../img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
                     </a>
-                    <form class="main-header__search" method="get" action="https://echo.htmlacademy.ru" autocomplete="off">
+                    <form class="main-header__search" method="get" action="https://echo.htmlacademy.ru"
+                          autocomplete="off">
                         <input type="search" name="search" placeholder="Поиск лота">
                         <input class="main-header__search-btn" type="submit" name="find" value="Найти">
                     </form>
@@ -112,18 +119,22 @@ if (isset($_GET)) {
                                 <img src='../<?= $lot_url; ?>' width="730" height="548" alt="Сноуборд">
                             </div>
                             <p class="lot-item__category">Категория: <span><?= $lot_category; ?></span></p>
-                            <p class="lot-item__description">Легкий маневренный сноуборд, готовый дать жару в любом парке,
+                            <p class="lot-item__description">Легкий маневренный сноуборд, готовый дать жару в любом
+                                парке,
                                 растопив
                                 снег
-                                мощным щелчкоми четкими дугами. Стекловолокно Bi-Ax, уложенное в двух направлениях, наделяет
+                                мощным щелчкоми четкими дугами. Стекловолокно Bi-Ax, уложенное в двух направлениях,
+                                наделяет
                                 этот
                                 снаряд
-                                отличной гибкостью и отзывчивостью, а симметричная геометрия в сочетании с классическим прогибом
+                                отличной гибкостью и отзывчивостью, а симметричная геометрия в сочетании с классическим
+                                прогибом
                                 кэмбер
                                 позволит уверенно держать высокие скорости. А если к концу катального дня сил совсем не
                                 останется,
                                 просто
-                                посмотрите на Вашу доску и улыбнитесь, крутая графика от Шона Кливера еще никого не оставляла
+                                посмотрите на Вашу доску и улыбнитесь, крутая графика от Шона Кливера еще никого не
+                                оставляла
                                 равнодушным.</p>
                         </div>
                         <div class="lot-item__right">
@@ -291,7 +302,7 @@ if (isset($_GET)) {
                 </div>
             </div>
         </footer>
-<?php
+        <?php
 
     } else {
         http_response_code(404);
