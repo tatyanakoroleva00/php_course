@@ -1,3 +1,12 @@
+<?php
+if(isset($_SESSION['user'])) {
+    $user = $_SESSION['user'];
+    $user_name = $user['username'];
+    $avatar = 'img/avatar.jpg';
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -23,10 +32,11 @@
 
             <nav class="user-menu">
 
-                <?php if ($is_auth) : ?>
+<!--                --><?php //if ($is_auth) : ?>
+                <?php if (isset($_SESSION['user'])) : ?>
 
                     <div class="user-menu__image">
-                        <img src='<?= $user_avatar ?>' width="40" height="40" alt="Пользователь"/>
+                        <img src='<?= $avatar ?>' width="40" height="40" alt="Аватар"/>
                     </div>
                     <div class="user-menu__logged">
                         <p><?= $user_name ?></p>
