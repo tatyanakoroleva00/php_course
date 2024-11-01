@@ -41,6 +41,7 @@ if(isset($_SESSION['user'])) {
                     <div class="user-menu__logged">
                         <p><?= $user_name ?></p>
                     </div>
+                    <div><a href="logout.php">Выйти</a></button></div>
                 <?php else: ?>
 
                     <ul class="user-menu__list">

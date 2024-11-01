@@ -1,6 +1,7 @@
 <?php
 
 require_once '../lots_list.php';
+session_start();
 print_r($_SESSION);
 
 if (isset($_GET)) {
