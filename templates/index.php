@@ -1,12 +1,3 @@
-<?php function formattedPrice($arg)
-{
-    $rounded_number = ceil($arg);
-    if ($rounded_number < 1000) return $rounded_number;
-    elseif ($rounded_number > 1000) {
-        return number_format($rounded_number, 0, ' ', ' ');
-    }
-} ?>
-
 <section class="promo">
     <h2 class="promo__title">Нужен стафф для катки?</h2>
     <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и

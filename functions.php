@@ -28,3 +28,12 @@ function formattedData($date) {
 //    print("{$hours}Ч : {$minutes}М");
     return("{$hours}Ч : {$minutes}М");
 }
+
+function formattedPrice($arg)
+{
+    $rounded_number = ceil($arg);
+    if ($rounded_number < 1000) return $rounded_number;
+    elseif ($rounded_number > 1000) {
+        return number_format($rounded_number, 0, ' ', ' ');
+    }
+}

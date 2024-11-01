@@ -1,7 +1,15 @@
 <?php
 
+print_r($_SESSION);
 //print_r($_POST);
+//print_r($_GET);
 
+if (session_status() === PHP_SESSION_ACTIVE) {
+    echo "Сессия открыта.";
+} else {
+    echo "Сессия не открыта.";
+}
+//session_destroy();
 ?>
         <nav class="nav">
             <ul class="nav__list container">
