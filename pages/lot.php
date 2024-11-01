@@ -1,6 +1,7 @@
 <?php
 
 require_once '../lots_list.php';
+print_r($_SESSION);
 
 if (isset($_GET)) {
     $lot_name = $lots_list[$_GET['id']]['name'];
@@ -29,17 +30,16 @@ if (isset($_GET['id'])) {
         // Обновляем COOKIE с новым списком id
         setcookie('ids', implode(',', $ids), time() + 3600, '/'); // COOKIE будет действительна 1 час
 
-        echo "ID добавлен в COOKIE.";
+//        echo "ID добавлен в COOKIE.";
     } else {
-        echo "ID уже существует в COOKIE.";
+//        echo "ID уже существует в COOKIE.";
     }
 
-    print_r($_COOKIE);
     //Стереть Cookies
 //    setcookie('ids', implode(',', $ids), time() - 3600, '/'); // COOKIE будет действительна 1 час
 
 } else {
-    echo "ID не найден.";
+//    echo "ID не найден.";
 }
 
 ?>
@@ -137,6 +137,8 @@ if (isset($_GET['id'])) {
                                 оставляла
                                 равнодушным.</p>
                         </div>
+
+                        <?php if(isset($_SESSION['user'])):?>
                         <div class="lot-item__right">
                             <div class="lot-item__state">
                                 <div class="lot-item__timer timer">
@@ -217,6 +219,9 @@ if (isset($_GET['id'])) {
                                 </table>
                             </div>
                         </div>
+
+                        <?php endif; ?>
+
                     </div>
                 </section>
             </main>
