@@ -10,7 +10,7 @@ if (!isset($_SESSION['user'])) {
     echo "Доступ запрещен";
     exit;
 }
-else {пше
+else {
 
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
