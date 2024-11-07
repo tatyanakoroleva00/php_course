@@ -31,20 +31,23 @@ $add_lot_page = 'add.php';
                 <input type="search" name="search" placeholder="Поиск лота">
                 <input class="main-header__search-btn" type="submit" name="find" value="Найти">
             </form>
-            <a class="main-header__add-lot button" href="<?=$add_lot_page;?>">Добавить лот</a>
-
+            <div><a class="main-header__add-lot button" href="<?=$add_lot_page;?>">Добавить лот</a></div>
             <nav class="user-menu">
 
-<!--                --><?php //if ($is_auth) : ?>
                 <?php if (isset($_SESSION['user'])) : ?>
 
                     <div class="user-menu__image">
                         <img src='<?= $avatar ?>' width="40" height="40" alt="Аватар"/>
                     </div>
                     <div class="user-menu__logged">
-                        <p><?= $user_name ?></p>
+
+                        <li class="user-menu__item"><?= $user_name ?></li>
+                        <li class="user-menu__item">
+                            <a href="logout.php">Выйти</a>
+                        </li>
+
                     </div>
-                    <div><a href="logout.php">Выйти</a></button></div>
+
                 <?php else: ?>
 
                     <ul class="user-menu__list">

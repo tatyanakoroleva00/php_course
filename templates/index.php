@@ -1,3 +1,7 @@
+<?php
+//$show_lot_page = 'show_lot.php';
+?>
+
 <section class="promo">
     <h2 class="promo__title">Нужен стафф для катки?</h2>
     <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и
@@ -22,7 +26,7 @@
                 </div>
                 <div class="lot__info">
                     <span class="lot__category"><?=$elem['category']?></span>
-                    <h3 class="lot__title"><a class="text-link" href='pages/lot.php?id=<?=$row;?>'><?=$elem['name']?></a></h3>
+                    <h3 class="lot__title"><a class="text-link" href='show_lot.php?id=<?=$row;?>'><?=$elem['name']?></a></h3>
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>

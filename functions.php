@@ -29,6 +29,8 @@ function formattedData($date) {
     return("{$hours}Ч : {$minutes}М");
 }
 
+$expiration_date = formattedData("11.11.2024");
+
 function formattedPrice($arg)
 {
     $rounded_number = ceil($arg);

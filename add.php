@@ -50,7 +50,7 @@ else {
                 'data' => $data
             ]);
         } else {
-            $page_content = include_template('lot.php', [
+            $page_content = include_template('lot2.php', [
                 'data' => $data,
                 'formatted_data' => formattedData($data['lot_date'])
             ]);

@@ -3,38 +3,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $textareaContent = isset($_POST['message']) ? $_POST['message'] : '';
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Добавление лота</title>
-    <link href="../css/normalize.min.css" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/flatpickr.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="page-wrapper">
-    <header class="main-header">
-        <div class="main-header__container container">
-            <h1 class="visually-hidden">YetiCave</h1>
-            <a class="main-header__logo" href="index.html">
-                <img src="../img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
-            </a>
-            <form class="main-header__search" method="get" action="https://echo.htmlacademy.ru" autocomplete="off">
-                <input type="search" name="search" placeholder="Поиск лота">
-                <input class="main-header__search-btn" type="submit" name="find" value="Найти">
-            </form>
-            <a class="main-header__add-lot button" href="add-lot.html">Добавить лот</a>
-            <nav class="user-menu">
-                <div class="user-menu__logged">
-                    <p>#user_name#</p>
-                    <a class="user-menu__bets" href="my-bets.html">Мои ставки</a>
-                    <a class="user-menu__logout" href="#">Выход</a>
-                </div>
-            </nav>
-        </div>
-    </header>
     <form class="form form--add-lot container <?php echo !empty($errors) ? 'form--invalid' : '' ?>" action="../add.php"
           method="post" enctype="multipart/form-data"> <!-- form--invalid -->
         <h2>Добавление лота</h2>

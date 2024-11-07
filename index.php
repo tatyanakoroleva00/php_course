@@ -13,7 +13,7 @@ $i = 0;
 $page_content = include_template('index.php', [
    'categories' => $categories,
    'lots_list' => $lots_list,
-    'formatted_data' => formattedData("20.10.2024")
+    'formatted_data' => $expiration_date,
 ]);
 
 $layout_content = include_template('layout.php', [
