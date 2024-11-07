@@ -4,7 +4,10 @@ if(isset($_SESSION['user'])) {
     $user_name = $user['username'];
     $avatar = 'img/avatar.jpg';
 }
-
+$signup_page = 'sign_up.php';
+$login_page = 'login.php';
+$main_page = '/';
+$add_lot_page = 'add.php';
 ?>
 
 <!DOCTYPE html>
@@ -21,14 +24,14 @@ if(isset($_SESSION['user'])) {
     <header class="main-header">
         <div class="main-header__container container">
             <h1 class="visually-hidden">YetiCave</h1>
-            <a class="main-header__logo">
+            <a class="main-header__logo" href="<?=$main_page;?>">
                 <img src="../img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
             </a>
             <form class="main-header__search" method="get" action="https://echo.htmlacademy.ru" autocomplete="off">
                 <input type="search" name="search" placeholder="Поиск лота">
                 <input class="main-header__search-btn" type="submit" name="find" value="Найти">
             </form>
-            <a class="main-header__add-lot button" href="pages/add-lot.html">Добавить лот</a>
+            <a class="main-header__add-lot button" href="<?=$add_lot_page;?>">Добавить лот</a>
 
             <nav class="user-menu">
 
@@ -46,10 +49,10 @@ if(isset($_SESSION['user'])) {
 
                     <ul class="user-menu__list">
                         <li class="user-menu__item">
-                            <a href="#">Регистрация</a>
+                            <a href="<?php echo $signup_page;?>">Регистрация</a>
                         </li>
                         <li class="user-menu__item">
-                            <a href="#">Вход</a>
+                            <a href="<?= $login_page?>">Вход</a>
                         </li>
                     </ul>
                 <? endif; ?>
@@ -124,7 +127,7 @@ if(isset($_SESSION['user'])) {
                 </svg>
             </a>
         </div>
-        <a class="main-footer__add-lot button" href="add-lot.html">Добавить лот</a>
+        <a class="main-footer__add-lot button" href="<?=$add_lot_page;?>">Добавить лот</a>
         <div class="main-footer__developed-by">
             <span class="visually-hidden">Разработано:</span>
             <a class="logo-academy" href="https://htmlacademy.ru/intensive/php">

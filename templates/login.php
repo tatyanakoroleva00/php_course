@@ -1,41 +1,14 @@
 <?php
 
-print_r($_SESSION);
-//print_r($_POST);
-//print_r($_GET);
+//print_r($_SESSION);
 
 if (session_status() === PHP_SESSION_ACTIVE) {
-    echo "Сессия открыта.";
+//    echo "Сессия открыта.";
 } else {
-    echo "Сессия не открыта.";
+//    echo "Сессия не открыта.";
 }
 //session_destroy();
 ?>
-        <nav class="nav">
-            <ul class="nav__list container">
-                <li class="nav__item">
-                    <a href="all-lots.html">Доски и лыжи</a>
-                </li>
-                <li class="nav__item">
-                    <a href="all-lots.html">Крепления</a>
-                </li>
-                <li class="nav__item">
-                    <a href="all-lots.html">Ботинки</a>
-                </li>
-                <li class="nav__item">
-                    <a href="all-lots.html">Одежда</a>
-                </li>
-                <li class="nav__item">
-                    <a href="all-lots.html">Инструменты</a>
-                </li>
-                <li class="nav__item">
-                    <a href="all-lots.html">Разное</a>
-                </li>
-            </ul>
-        </nav>
-<!--        <form class="form container" action="/" method="post"> -->
-
-            <!-- form--invalid -->
         <form class="form container" method="post" action="../login.php">
         <h2>Вход</h2>
             <div class="form__item"> <!-- form__item--invalid -->
