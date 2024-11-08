@@ -7,12 +7,9 @@ require_once 'userdata.php';
 require_once 'categories.php';
 
 session_start();
-print_r($_POST);
+//print_r($_POST);
 
 $title = 'Вход';
-
-//$categories = ["Доски и лыжи", "Крепления", "Ботинки", "Одежда", "Инструменты", "Разное"];
-//$i = 0;
 
 //Проверка на получение данных из формы
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -21,11 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
 
     //Проверка на наличие ошибок при заполнении формы
-//    foreach ($required as $field) {
-//        if (empty($form[$field])) {
-//            $errors[$field] = 'Это поле нужно заполнить';
-//        }
-//    }
+    foreach ($required as $field) {
+        if (empty($_POST[$field])) {
+            if($field === 'email') {
+                $errors[$field] = 'Введите email';
+            }
+            if($field === 'password') {
+                $errors[$field] = 'Введите пароль';
+            }
+        }
+    }
 
     //Аутентификация
 
@@ -45,10 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         //Если такого пользователя нет или есть ошибки
-    } else {
-        $errors['email'] = 'Такой пользователь не найден';
-        $errors['password'] = 'Неверный пароль';
     }
+        else  {
+            $errors['email'] = 'Такой пользователь не найден';
+        }
+
 
     if(count($errors)) {
         $page_content = include_template('login.php', [
@@ -59,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: /index.php");
     exit();
     }
-    print_r($errors);
+//    print_r($errors);
 } // Если нет запроса POST
 else {
     $page_content = include_template('login.php', []);
