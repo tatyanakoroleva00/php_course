@@ -1,14 +1,14 @@
 <?php
-function formattedDate($date) {
-    date_default_timezone_set('Europe/Moscow');
-    $cur_time = time();
-    $finish_date = strtotime('tomorrow midnight');
-    $left_time_in_seconds = $finish_date - $cur_time;
-    $hours = floor($left_time_in_seconds / 3600);
-    $minutes = floor(($left_time_in_seconds % 3600) / 60);
-//    print("{$hours}Ч : {$minutes}М");
-    return("{$hours}Ч : {$minutes}М");
-}
+//function formattedDate($date) {
+//    date_default_timezone_set('Europe/Moscow');
+//    $cur_time = time();
+//    $finish_date = strtotime('tomorrow midnight');
+//    $left_time_in_seconds = $finish_date - $cur_time;
+//    $hours = floor($left_time_in_seconds / 3600);
+//    $minutes = floor(($left_time_in_seconds % 3600) / 60);
+////    print("{$hours}Ч : {$minutes}М");
+//    return("{$hours}Ч : {$minutes}М");
+//}
 ?>
 
 <section class="promo">
@@ -28,15 +28,16 @@ function formattedDate($date) {
     </div>
     <ul class="lots__list">
         <!--заполните этот список из массива с товарами-->
+
         <?php
         $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
-        FROM `lot` JOIN category ON lot.category_id = category.id
-        WHERE `lot_date` > NOW()";
+        FROM `lot`
+        JOIN category ON lot.category_id = category.id
+        WHERE `lot_date` > NOW()
+        ORDER BY lot_date DESC";
 
         $lots_list = mysqli_query($con, $query);
         ?>
-
-
 
         <?php foreach($lots_list as $row => $elem) :?>
             <li class="lots__item lot">
@@ -53,7 +54,8 @@ function formattedDate($date) {
                         </div>
                         <div class="lot__timer timer">
 <!--                            --><?php //echo $formatted_date?>
-                            <?php echo formattedDate($elem['lot_date'])?>
+<!--                            --><?php //echo formattedDate($elem['lot_date'])?>
+                            <?php echo $elem['lot_date']?>
                     </div>
                 </div>
             </li>

@@ -1,19 +1,5 @@
 <?php
 session_start();
-
-
-function formattedDate($date)
-{
-    date_default_timezone_set('Europe/Moscow');
-    $cur_time = time();
-    $finish_date = strtotime('tomorrow midnight');
-    $left_time_in_seconds = $finish_date - $cur_time;
-    $hours = floor($left_time_in_seconds / 3600);
-    $minutes = floor(($left_time_in_seconds % 3600) / 60);
-//    print("{$hours}Ч : {$minutes}М");
-    return ("{$hours}Ч : {$minutes}М");
-}
-
 ?>
                 <section class="lot-item container">
                     <h2><?= $lot_name ?? ''; ?></h2>

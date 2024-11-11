@@ -3,6 +3,7 @@
 require_once 'functions.php';
 require_once 'lots_list.php';
 require_once 'categories.php';
+require_once 'init.php';
 
 session_start();
 
@@ -17,6 +18,7 @@ if (!isset($_SESSION['user'])) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $lot = $_POST;
+        print_r($lot);
 
         $required = ['lot_name', 'category', 'lot_message', 'img_url', 'cur_price', 'lot_step', 'lot_date'];
         $dict = [
@@ -59,12 +61,44 @@ if (!isset($_SESSION['user'])) {
                 'lot' => $lot,
             ]);
         } else {
+            $name = $lot['lot_name'];
+            $lot_message = $lot['lot_message'];
+            $img_url = $_POST['img_url'];
+            $lot_step = $lot['lot_step'];
+            $price = formattedPrice($_POST['cur_price']);
+            $category = $lot['category'];
+
+            //Преобразование даты из формата 11.11.2024 в формат 2024-11-11.
+            $originalDate = $_POST['lot_date'];
+            // Создаем объект DateTime из строки с указанным форматом
+            $dateTime = DateTime::createFromFormat('d.m.Y', $originalDate);
+            // Преобразуем дату в формат YYYY-MM-DD
+            $formattedDate = $dateTime->format('Y-m-d');
+
+
+            $query1 = "SELECT id FROM `category` WHERE LOWER(category.name) LIKE LOWER('$category')";
+
+            $result = mysqli_query($con, $query1);
+            print_r($result);
+
+                // Извлекаем id категории
+                $row = mysqli_fetch_assoc($result1);
+                $category_id = $row['id'];
+
+
+
+            $query2 = "INSERT into `lot` SET `name` = '$name', `lot_message` = '$lot_message', `img_url` = '$img_url', `lot_step` = '$lot_step', `category_id` = '$query1', `price` = '$price', `lot_date` = '$formattedDate', `lot_rate` = 0, `cur_price` = '$price' ";
+
+            $result = mysqli_query($con, $query2);
+            print_r($query);
+
             $page_content = include_template('lot.php', [
-                    'lot_name' => $lot['name'],
+                    'lot_name' => $name,
                     'lot_category' => $lot['category'],
-                    'lot_url' => $_POST['img_url'],
-                    'lot_message' => $lot['lot_message'],
-                    'lot_step' => $lot['lot_step'],
+                    'lot_url' => $img_url,
+                    'lot_message' => $lot_message,
+                    'lot_step' =>  $lot_step,
+
                     'cur_price' => $cur_price,
                     'formatted_date' => $lot_date,
                 ]
