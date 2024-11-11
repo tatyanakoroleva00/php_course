@@ -30,7 +30,7 @@ if (!isset($_SESSION['user'])) {
         $errors = [];
 
         $cur_price = formattedPrice($_POST['cur_price']);
-        $lot_date = formattedData($lot['lot_date']);
+        $lot_date = formattedDate($lot['lot_date']);
 
         //Проверка на наличие пустых полей - и где конкретно.
         foreach ($_POST as $key => $value) {
@@ -66,7 +66,7 @@ if (!isset($_SESSION['user'])) {
                     'lot_message' => $lot['lot_message'],
                     'lot_step' => $lot['lot_step'],
                     'cur_price' => $cur_price,
-                    'formatted_data' => $lot_date,
+                    'formatted_date' => $lot_date,
                 ]
         );
         }

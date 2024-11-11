@@ -30,7 +30,7 @@ if (isset($_GET['id'])) {
             'lot_step' => $lot['lot_step'],
             'cur_price' => formattedPrice($lot['cur_price']),
 //            'lot_price' => formattedPrice($lot['price']),
-            'formatted_data' => $expiration_date,
+//            'formatted_date' => $expiration_date,
         ]);
     } else {
 //    echo "ID не найден.";
