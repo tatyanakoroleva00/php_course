@@ -1,7 +1,7 @@
 <?php
 if(isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
-    $user_name = $user['username'];
+    $user_name = $user['name'];
     $avatar = 'img/avatar.jpg';
 }
 $signup_page = 'sign_up.php';

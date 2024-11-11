@@ -1,17 +1,17 @@
  <?php
 
-$lots_list = [
+$lots_list = [ //dt_add, fav_count??
     [
-        'name' => '2014 Rossignol District Snowboard',
-        'category' => 'Доски и лыжи',
-        'price' => 10999,
-        'img_url' => 'img/lot-1.jpg',
+        'name' => '2014 Rossignol District Snowboard', //+
+        'category' => 'Доски и лыжи', //category_id //+
+        'price' => 10999, //+
+        'img_url' => 'img/lot-1.jpg', //+
         'number_of_bets' => 2,
-        'lot_message' => '',
-        'lot_rate' => 0,
-        'lot_step' => 200,
-        'cur_price' => 10999,
-        'lot_date' => '',
+        'lot_message' => '', //+
+        'lot_rate' => 0, //+
+        'lot_step' => 200, //+
+        'cur_price' => 10999,//+
+        'lot_date' => '', //+
     ],
     [
         'name' => 'DC Ply mens 2016/2017 Snowboard',
@@ -70,6 +70,7 @@ $lots_list = [
         'lot_message' => '',
         'lot_rate' => 0,
         'lot_step' => 200,
-        'cur_price' => 5400,'lot_date' => '',
+        'cur_price' => 5400,
+        'lot_date' => '',
     ]
 ];

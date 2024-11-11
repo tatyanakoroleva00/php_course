@@ -3,8 +3,9 @@ error_reporting(E_ALL & ~E_STRICT);
 require_once 'functions.php';
 require_once 'lots_list.php';
 require_once 'searchUserByEmail.php';
-require_once 'userdata.php';
+//require_once 'userdata.php';
 require_once 'categories.php';
+require_once 'init.php';
 
 session_start();
 //print_r($_POST);
@@ -31,17 +32,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //Аутентификация
 
+    $query = "SELECT * from `users`";
+    $result = mysqli_query($con, $query);
+    $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
     //Если нет ошибок и пользователь найден в БД по мейлу
     if ($user = searchUserByEmail($form['email'], $users)) {
 
         //Если пароль совпадает с паролем в БД
 
-        $password = $user['password'];
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $passwordFromDB = $user['password'];
 
-        if (password_verify($form['password'], $hashed_password)) {
+//        $hashed_password = password_hash($passwordEntered, PASSWORD_DEFAULT);
+//        print_r($hashed_password);
+//        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+        if (password_verify($form['password'], $passwordFromDB)) {
+//            if (password_verify($passwordFromDB, $hashed_password)) {
             $_SESSION['user'] = $user;
-        //Если пароль не совпадает с паролем в БД
+        //Если пароль не совпадает с паролем в БД0
         } else {
             $errors['password'] = 'Неверный пароль';
         }
