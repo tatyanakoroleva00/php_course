@@ -12,12 +12,3 @@ if($con == false) {
 mysqli_set_charset($con, "utf8");
 
 
-//Example
-//        $sql = "SELECT `id`, `name` from `category`;";
-//        $result = mysqli_query($con, $sql);
-//        $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-//
-//        foreach ($rows as $row) : ?>
-    <!---->
-    <!--        <li>--><?php //echo $row['name']; ?><!--</li>-->
-    <!--        --><?php //endforeach;?>

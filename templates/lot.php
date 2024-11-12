@@ -6,9 +6,9 @@ session_start();
                     <div class="lot-item__content">
                         <div class="lot-item__left">
                             <div class="lot-item__image">
-                                <img src='../<?= $lot_url ?? ''; ?>' width="730" height="548" alt="<?$lot_name ?? ''?>">
+                                <img src='../<?= $img_url ?? ''; ?>' width="730" height="548" alt="<?$lot_name ?? ''?>">
                             </div>
-                            <p class="lot-item__category">Категория: <span><?= $lot_category; ?></span></p>
+                            <p class="lot-item__category">Категория: <span><?= $category_name; ?></span></p>
                             <p class="lot-item__description">Описание: <span><?=$lot_message ?? ''?></span></p>
                         </div>
 
@@ -26,10 +26,10 @@ session_start();
                                     <div class="lot-item__cost-state">
                                         <div class="lot-item__rate">
                                             <span class="lot-item__amount">Текущая цена</span>
-                                            <span class="lot-item__cost"><?= $cur_price; ?><b class="rub">р</b></span>
+                                            <span class="lot-item__cost"><?= formattedPrice($cur_price); ?><b class="rub">р</b></span>
                                         </div>
                                         <div class="lot-item__min-cost">
-                                            Мин. ставка <span><?php echo $lot_step ?>р</span>
+                                            Мин. ставка <span><?= $lot_step;?>р</span>
                                         </div>
                                     </div>
                                     <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post"
@@ -102,6 +102,5 @@ session_start();
                         </div>
 
                         <?php endif; ?>
-
                     </div>
                 </section>

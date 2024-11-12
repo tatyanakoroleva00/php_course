@@ -11,14 +11,12 @@ $title = 'Добавить лот';
 if (!isset($_SESSION['user'])) {
     http_response_code(403);
     echo "Доступ запрещен";
-//    exit;
 } else {
 
     //Если отправка совершена
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $lot = $_POST;
-        print_r($lot);
 
         $required = ['lot_name', 'category', 'lot_message', 'img_url', 'cur_price', 'lot_step', 'lot_date'];
         $dict = [
@@ -30,9 +28,6 @@ if (!isset($_SESSION['user'])) {
             'lot_step' => 'Ставка',
             'lot_date' => 'Дата завершения торгов'];
         $errors = [];
-
-        $cur_price = formattedPrice($_POST['cur_price']);
-        $lot_date = formattedDate($lot['lot_date']);
 
         //Проверка на наличие пустых полей - и где конкретно.
         foreach ($_POST as $key => $value) {
@@ -55,52 +50,61 @@ if (!isset($_SESSION['user'])) {
             $errors['Файл'] = 'Вы не загрузили файл';
         }
 
+        //Проверка на наличие ошибок при заполнении формы
         if (count($errors)) {
             $page_content = include_template('addlotform.php', [
                 'errors' => $errors,
                 'lot' => $lot,
             ]);
         } else {
-            $name = $lot['lot_name'];
-            $lot_message = $lot['lot_message'];
-            $img_url = $_POST['img_url'];
-            $lot_step = $lot['lot_step'];
-            $price = formattedPrice($_POST['cur_price']);
-            $category = $lot['category'];
+            //При изначальном добавлении лота $cur_price = $price у меня
+            $formatted_cur_price = formattedPrice($_POST['cur_price']); //Отформатированная цена для публикации на странице
+            $formatted_price = formattedPrice($_POST['cur_price']); //Отформатированная цена для публикации на странице
+            $formatted_date = formattedDate($lot['lot_date']); //Отформатированная цена для публикации на странице
 
-            //Преобразование даты из формата 11.11.2024 в формат 2024-11-11.
+            $name = $_POST['lot_name'];
+            $lot_message = $_POST['lot_message'];
+            $img_url = $_POST['img_url'];
+            $lot_step = $_POST['lot_step'];
+            $category = $_POST['category'];
+            $cur_price = $_POST['cur_price'];
+            $price = $_POST['cur_price'];
+
+            //Преобразование даты из формата 11.11.2024 в формат 2024-11-11 для БД
             $originalDate = $_POST['lot_date'];
             // Создаем объект DateTime из строки с указанным форматом
             $dateTime = DateTime::createFromFormat('d.m.Y', $originalDate);
             // Преобразуем дату в формат YYYY-MM-DD
-            $formattedDate = $dateTime->format('Y-m-d');
+            $lot_date = $dateTime->format('Y-m-d');
 
 
-            $query1 = "SELECT id FROM `category` WHERE LOWER(category.name) LIKE LOWER('$category')";
+            //Поиск по категории номера из таблицы "category", чтобы подставить в новый lot в БД.
+            $query1 = "SELECT id FROM category WHERE LOWER(category.name) = LOWER('$category')";
+            $result1 = mysqli_query($con, $query1);
 
-            $result = mysqli_query($con, $query1);
-            print_r($result);
-
-                // Извлекаем id категории
+            if ($result1 && mysqli_num_rows($result1) > 0) {
                 $row = mysqli_fetch_assoc($result1);
                 $category_id = $row['id'];
 
+                $query2 = "INSERT into `lot` SET `name` = '$name', `lot_message` = '$lot_message', `img_url` = '$img_url', `lot_step` = '$lot_step', `category_id` = '$category_id', `price` = '$price', `lot_date` = '$lot_date', `lot_rate` = 0, `cur_price` = '$price' ";
 
-
-            $query2 = "INSERT into `lot` SET `name` = '$name', `lot_message` = '$lot_message', `img_url` = '$img_url', `lot_step` = '$lot_step', `category_id` = '$query1', `price` = '$price', `lot_date` = '$formattedDate', `lot_rate` = 0, `cur_price` = '$price' ";
-
-            $result = mysqli_query($con, $query2);
-            print_r($query);
+                if(mysqli_query($con, $query2)) {
+                    echo 'Лот успешно добавлен!';
+                } else {
+                    echo "Ошибка добавления лота: " . mysqli_error($con);
+                }
+            } else {
+                echo "Категория не найдена!";
+            }
 
             $page_content = include_template('lot.php', [
                     'lot_name' => $name,
-                    'lot_category' => $lot['category'],
-                    'lot_url' => $img_url,
+                    'lot_category' => $category,
+                    'img_url' => $img_url,
                     'lot_message' => $lot_message,
                     'lot_step' =>  $lot_step,
-
-                    'cur_price' => $cur_price,
-                    'formatted_date' => $lot_date,
+                    'cur_price' => $formatted_cur_price,
+                    'formatted_date' => $formatted_date,
                 ]
         );
         }
