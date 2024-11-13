@@ -6,7 +6,6 @@ require_once 'categories.php';
 
 
 session_start();
-
 $title = 'Главная страница';
 
 $i = 0;
@@ -18,8 +17,6 @@ $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot
         ORDER BY lot_date DESC";
 
 $lots_list = mysqli_query($con, $query);
-
-
 
 $page_content = include_template('index.php', [
    'categories' => $categories,

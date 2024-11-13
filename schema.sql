@@ -20,3 +20,9 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE FULLTEXT INDEX lot_search
+ON lot(`name`, `lot_message`);
+
+
+

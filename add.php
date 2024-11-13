@@ -62,6 +62,7 @@ if (!isset($_SESSION['user'])) {
             $formatted_price = formattedPrice($_POST['cur_price']); //Отформатированная цена для публикации на странице
             $formatted_date = formattedDate($lot['lot_date']); //Отформатированная цена для публикации на странице
 
+
             $name = $_POST['lot_name'];
             $lot_message = $_POST['lot_message'];
             $img_url = $_POST['img_url'];
@@ -77,6 +78,8 @@ if (!isset($_SESSION['user'])) {
             // Преобразуем дату в формат YYYY-MM-DD
             $lot_date = $dateTime->format('Y-m-d');
 
+            //Поиск айди пользователя
+            $user_id = $_SESSION['user']['id'];
 
             //Поиск по категории номера из таблицы "category", чтобы подставить в новый lot в БД.
             $query1 = "SELECT id FROM category WHERE LOWER(category.name) = LOWER('$category')";
@@ -86,7 +89,9 @@ if (!isset($_SESSION['user'])) {
                 $row = mysqli_fetch_assoc($result1);
                 $category_id = $row['id'];
 
-                $query2 = "INSERT into `lot` SET `name` = '$name', `lot_message` = '$lot_message', `img_url` = '$img_url', `lot_step` = '$lot_step', `category_id` = '$category_id', `price` = '$price', `lot_date` = '$lot_date', `lot_rate` = 0, `cur_price` = '$price' ";
+                $query2 = "INSERT into `lot` SET `name` = '$name', `lot_message` = '$lot_message', `img_url` = '$img_url',
+                `lot_step` = '$lot_step', `category_id` = '$category_id', `price` = '$price', `lot_date` = '$lot_date', `lot_rate` = 0, `cur_price` = '$price',
+                `user_id` = '$user_id'";
 
                 if(mysqli_query($con, $query2)) {
                     echo 'Лот успешно добавлен!';
@@ -96,7 +101,6 @@ if (!isset($_SESSION['user'])) {
             } else {
                 echo "Категория не найдена!";
             }
-
             $page_content = include_template('lot.php', [
                     'lot_name' => $name,
                     'lot_category' => $category,
@@ -104,9 +108,10 @@ if (!isset($_SESSION['user'])) {
                     'lot_message' => $lot_message,
                     'lot_step' =>  $lot_step,
                     'cur_price' => $formatted_cur_price,
-                    'formatted_date' => $formatted_date,
+                    'formatted_date' => $formatted_date
                 ]
         );
+
         }
     } else {
         $page_content = include_template('addlotform.php', []);
@@ -116,7 +121,7 @@ if (!isset($_SESSION['user'])) {
     $layout_content = include_template('layout.php', [
         'title' => $title,
         'content' => $page_content,
-        'categories' => $categories,
+        'categories' => $categories
     ]);
 
     print_r($layout_content);
