@@ -3,6 +3,7 @@ error_reporting(E_ALL & ~E_STRICT);
 require_once 'init.php';
 require_once 'functions.php';
 require_once 'categories.php';
+require_once 'vendor/autoload.php';
 
 
 session_start();

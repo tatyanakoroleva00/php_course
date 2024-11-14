@@ -1,5 +1,6 @@
 <?php
 require_once 'functions.php';
+require_once 'vendor/autoload.php';
 //$db = require_once 'config/db.php';
 
 $con = mysqli_connect("localhost", "root", "", "schema");

@@ -36,7 +36,7 @@ session_start();
                                         <p class="lot-item__form-item form__item form__item--invalid">
                                             <label for="cost">Ваша ставка</label>
                                             <input id="cost" type="text" name="lot_rate" placeholder="0" value="<?php echo isset($_POST['lot_rate']) ? $_POST['lot_rate'] : '';?>">
-                                            <span class="form__error">Введите наименование лота</span>
+<!--                                            <span class="form__error">Введите наименование лота</span>-->
                                         </p>
                                         <button type="submit" class="button">Сделать ставку</button>
                                     </form>

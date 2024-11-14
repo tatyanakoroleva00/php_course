@@ -3,6 +3,7 @@
 require_once 'functions.php';
 require_once 'init.php';
 require_once 'categories.php';
+require_once 'vendor/autoload.php';
 
 if (isset($_GET['search'])) {
 

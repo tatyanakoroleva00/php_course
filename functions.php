@@ -1,5 +1,6 @@
 <?php
 require_once 'init.php';
+require_once 'vendor/autoload.php';
 
 function include_template($name, array $data = [])
 {

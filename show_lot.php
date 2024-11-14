@@ -3,6 +3,7 @@
 require_once 'functions.php';
 require_once 'categories.php';
 require_once 'init.php';
+require_once 'vendor/autoload.php';
 
 session_start();
 
@@ -99,6 +100,7 @@ if (isset($_GET['id'])) {
 
                 if (mysqli_query($con, $update_query)) {
                     echo "Данные успешно обновлены!";
+                    header("Location: " . $_SERVER['REQUEST_URI']);exit;
                 } else {
                     echo "Ошибка обновления: " . mysqli_error($con);
                 }

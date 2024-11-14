@@ -1,4 +1,5 @@
 <?php
+require_once 'vendor/autoload.php';
 
 function searchUserByEmail($email, $users) {
     $result = null;

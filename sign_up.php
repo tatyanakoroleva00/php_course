@@ -6,6 +6,7 @@ require_once 'searchUserByEmail.php';
 //require_once 'userdata.php';
 require_once 'categories.php';
 require_once 'init.php';
+require_once 'vendor/autoload.php';
 
 $title = 'Регистрация';
 session_start();
