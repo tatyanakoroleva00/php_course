@@ -2,8 +2,8 @@
 if(isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
     $user_name = $user['name'];
-    $avatar = 'img/avatar.jpg';
 }
+$default_avatar = 'img/avatar.jpg';
 $signup_page = 'sign_up.php';
 $login_page = 'login.php';
 $main_page = '/';
@@ -37,15 +37,11 @@ $add_lot_page = 'add.php';
                 <?php if (isset($_SESSION['user'])) : ?>
 
                     <div class="user-menu__image">
-                        <img src='<?= $avatar ?>' width="40" height="40" alt="Аватар"/>
+                        <img src='<?=$_SESSION['user']['avatar']; ?>' width="40" height="40" alt="Аватар"/>
                     </div>
                     <div class="user-menu__logged">
-
-                        <li class="user-menu__item"><?= $user_name ?></li>
-                        <li class="user-menu__item">
-                            <a href="logout.php">Выйти</a>
-                        </li>
-
+                        <p><?= $user_name ?></p>
+                        <p><a href="logout.php">Выйти</a></p>
                     </div>
 
                 <?php else: ?>

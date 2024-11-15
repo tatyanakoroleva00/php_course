@@ -3,7 +3,6 @@ error_reporting(E_ALL & ~E_STRICT);
 require_once 'functions.php';
 require_once 'lots_list.php';
 require_once 'searchUserByEmail.php';
-//require_once 'userdata.php';
 require_once 'categories.php';
 require_once 'init.php';
 require_once 'vendor/autoload.php';
@@ -11,13 +10,13 @@ require_once 'vendor/autoload.php';
 $title = 'Регистрация';
 session_start();
 $login_page = 'login.php';
-$errors = [1, 2, 3];
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $form = $_POST;
     $required = ['email', 'password', 'name', 'message'];
     $errors = [];
+
 
     //Проверка на наличие ошибок при заполнении формы
     foreach ($required as $field) {
@@ -34,8 +33,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             if($field === 'message') {
                 $errors[$field] = 'Напишите как с вами связаться';
             }
-    }
-    }
+    }}
 
     //Аутентификация
 
@@ -49,21 +47,32 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['email'] = 'Такой пользователь уже существует';
     }
 
-    //Если после проверок нет ошибок, то показываем определенную страницу
+    //Картинка. Если есть картинка и нет ошибок - помещаем в папку.
+    if (isset($_FILES['image']['name'])) {
+        $tmp_name = $_FILES['image']['tmp_name'];
+        $path = $_FILES['image']['name'];
+
+        if (!count($errors)) {
+            move_uploaded_file($tmp_name, 'img/' . $path);
+            $_POST['img_url'] = 'img/' . $path;
+        }
+    }
+
+
+//Если после проверок нет ошибок, то показываем определенную страницу
     if(!count($errors)) {
         $email = $form['email'];
         $password = $form['password'];
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $name = $form['name'];
         $message = $form['message'];
+        $img_url = $_POST['img_url'];
 
-        $sql = "INSERT INTO `users` SET `email` = '$email', `password` = '$hashed_password', `name` = '$name', `contacts` = '$message'";
-        $result = mysqli_query($con, $sql);
-
-        $page_content = include_template('login.php', [
+            $sql = "INSERT INTO `users` SET `email` = '$email', `password` = '$hashed_password', `name` = '$name', `contacts` = '$message', `avatar` = '$img_url'";
+            $result = mysqli_query($con, $sql);
+            $page_content = include_template('login.php', [
             'login_page' => $login_page,
-        ]);
-    }
+        ]);}
     //Если после проверок есть ошибки, то остаемся на текущей странице
     else {
         $page_content = include_template('sign_up.php', [
@@ -71,7 +80,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             'errors' => $errors,
         ]);
     }
-
 }
 else {
     $page_content = include_template('sign_up.php', [

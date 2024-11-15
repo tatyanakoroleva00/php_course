@@ -1,8 +1,6 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $textareaContent = isset($_POST['lot_message']) ? $_POST['lot_message'] : '';
-
-
 }
 ?>
 <form class="form form--add-lot container <?php echo !empty($errors) ? 'form--invalid' : '' ?>" action="../add.php"

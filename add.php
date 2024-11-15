@@ -104,18 +104,18 @@ if (!isset($_SESSION['user'])) {
             }
 
 
-//            $page_content = include_template('lot.php', [
-//                    'lot_name' => $name,
-//                    'lot_category' => $category,
-//                    'img_url' => $img_url,
-//                    'lot_message' => $lot_message,
-//                    'lot_step' =>  $lot_step,
-//                    'cur_price' => $formatted_cur_price,
-//                    'formatted_date' => $formatted_date
-//                ]);
+            $page_content = include_template('lot.php', [
+                    'lot_name' => $name,
+                    'lot_category' => $category,
+                    'img_url' => $img_url,
+                    'lot_message' => $lot_message,
+                    'lot_step' =>  $lot_step,
+                    'cur_price' => $formatted_cur_price,
+                    'formatted_date' => $formatted_date
+                ]);
 
-            header("Location: /index.php");
-            exit;
+//            header("Location: /index.php");
+//            exit;
 
         }
     } else {

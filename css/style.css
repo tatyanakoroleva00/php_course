@@ -237,6 +237,7 @@ main.container {
 .user-menu__item a {
   color: #879296;
   font-weight: 700;
+  list-style: none;
 }
 
 .user-menu__item a:hover {
@@ -246,7 +247,9 @@ main.container {
 .user-menu__item a:active {
   color: #727b7f;
 }
-
+.user-menu__item {
+  list-style-type: none;
+}
 /**/
 
 .user-menu {
@@ -258,11 +261,13 @@ main.container {
 .user-menu__logged {
   color: #879296;
   line-height: 22px;
+  display: flex;
+  flex-direction: column;
 }
 
 .user-menu__logged p {
   font-weight: 700;
-  margin: 0;
+  margin: 0 0 0 20px;
 }
 
 .user-menu__logged a {
@@ -271,11 +276,11 @@ main.container {
   font-weight: 400;
   float: left;
 }
-
-.user-menu__logged a:last-child {
-  margin-left: 20px;
+.user-menu__logged a:last-child{
+  margin: 0 0 0 0;
+  font-weight: bold;
+  color: #3838f3;
 }
-
 .user-menu__logged a:hover {
   text-decoration: underline;
 }

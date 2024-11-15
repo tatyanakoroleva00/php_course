@@ -1,4 +1,4 @@
-<form class="form container form--invalid" action="../sign_up.php" method="post" autocomplete="off">
+<form class="form container form--invalid" action="../sign_up.php" method="post" autocomplete="off" enctype="multipart/form-data">
       <h2>Регистрация нового аккаунта</h2>
       <div class="form__item">
         <label for="email">E-mail <sup>*</sup></label>
@@ -15,6 +15,12 @@
         <input id="name" type="text" name="name" placeholder="Введите имя" value="<?= isset($_POST['name']) ? $_POST['name'] : '' ?>">
         <span class="form__error"><?=$errors['name'] ?? ''?></span>
       </div>
+    <div>
+        <label>Аватар</label>
+        <div class="form__input-file">
+            <input type="file" id="avatar" name="image">
+        </div>
+    </div>
       <div class="form__item">
         <label for="message">Контактные данные <sup>*</sup></label>
         <textarea id="message" name="message" placeholder="Напишите как с вами связаться"><?= isset($_POST['message']) ? $_POST['message'] : '' ?></textarea>
