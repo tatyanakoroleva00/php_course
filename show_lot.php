@@ -80,10 +80,9 @@ if (isset($_GET['id'])) {
             $result = mysqli_query($con, $query);
             $cur_price = $lot_rate + $cur_price;
 
-            if ($result && mysqli_num_rows($result) > 0 && $lot_rate > $lot_step) {
+            if ($result && mysqli_num_rows($result) > 0 && ($lot_rate > $lot_step || $lot_rate == $lot_step)) {
                 $row = mysqli_fetch_assoc($result);
                 $data = json_decode($row['lot_rate'], true);
-
 
                 print_r($data);
 
@@ -115,10 +114,7 @@ if (isset($_GET['id'])) {
             http_response_code(404);
             $page_content = '<h1>Ошибка 404: Страница не найдена</h1>';
         }
-
-
 }
-
 
     $layout_content = include_template('layout.php', [
         'title' => 'Лот',

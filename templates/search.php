@@ -1,10 +1,7 @@
 <div class="container">
     <section class="lots">
-        <h2>Результаты поиска по запросу «<span>Union</span>»</h2>
-
+        <h2>Результаты поиска по запросу </h2>
         <?php if (isset($search_array)) : ?>
-
-        <?php $search_array;?>
             <ul class="lots__list">
                 <?php foreach ($search_array as $index => $item) :?>
                         <li class="lots__item lot">
@@ -14,7 +11,7 @@
                             </div>
                             <div class="lot__info">
                                 <span class="lot__category"><?= $item['category_name'] ?></span>
-                                <h3 class="lot__title"><a class="text-link" href="lot.php"> <?= $item['name'] ?></a>
+                                <h3 class="lot__title"><a class="text-link" href='show_lot.php?id=<?=$item['id']?>'"> <?= $item['name'] ?></a>
                                 </h3>
                                 <div class="lot__state">
                                     <div class="lot__rate">

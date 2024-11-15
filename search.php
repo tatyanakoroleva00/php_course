@@ -5,13 +5,15 @@ require_once 'init.php';
 require_once 'categories.php';
 require_once 'vendor/autoload.php';
 
+print_r($_GET);
 if (isset($_GET['search'])) {
 
     $searchQuery = $_GET['search'];
 
     $sql = "SELECT *
     FROM lot
-    WHERE MATCH(`name`, `lot_message`) AGAINST('$searchQuery')";
+    WHERE MATCH(`name`, `lot_message`) AGAINST('$searchQuery') AND
+    `lot_date` > NOW()";
 
     $result = mysqli_query($con, $sql);
 
@@ -32,7 +34,13 @@ if (isset($_GET['search'])) {
         'categories' => $categories,
     ]);
     print_r($layout);
-
+} else {
+    $page_content = include_template('search.php', []);
+    $layout = include_template('layout.php', [
+        'content' => $page_content,
+        'categories' => $categories,
+    ]);
+    print_r($layout);
 }
 
 
