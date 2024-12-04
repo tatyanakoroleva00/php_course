@@ -1,8 +1,5 @@
-<?php
-print_r($errors);
-?>
 <form class="form container" method="post" action="../login.php">
-    <span class="form__error" ><?php echo isset($errors) ? 'Пожалуйста, исправьте ошибки в форме.' : ''?></span>
+    <span class="form__error" ><?= isset($errors['message']) ? $errors['message'] : '';?></span>
     <h2>Вход</h2>
     <div class="form__item">
         <label for="email">E-mail <sup>*</sup></label>
