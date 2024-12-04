@@ -1,4 +1,5 @@
 <form class="form container form--invalid" action="../sign_up.php" method="post" autocomplete="off" enctype="multipart/form-data">
+    <span class="form__error form__error--bottom"><?=  !empty($errors) ? 'Пожалуйста, исправьте ошибки в форме.' : ''?></span>
       <h2>Регистрация нового аккаунта</h2>
       <div class="form__item">
         <label for="email">E-mail <sup>*</sup></label>
@@ -18,7 +19,8 @@
     <div>
         <label>Аватар</label>
         <div class="form__input-file">
-            <input type="file" id="avatar" name="image">
+            <input type="file" id="avatar" name="avatar">
+            <span class="form__error"><?=$errors['avatar'] ?? ''?></span>
         </div>
     </div>
       <div class="form__item">
@@ -26,7 +28,6 @@
         <textarea id="message" name="message" placeholder="Напишите как с вами связаться"><?= isset($_POST['message']) ? $_POST['message'] : '' ?></textarea>
         <span class="form__error"><?=$errors['message'] ?? ''?></span>
       </div>
-      <span class="form__error form__error--bottom"><?= !empty($errors) ? 'Пожалуйста, исправьте ошибки в форме.' : ''?></span>
       <button type="submit" class="button">Зарегистрироваться</button>
       <a class="text-link" href="<?=$login_page;?>">Уже есть аккаунт</a>
     </form>
