@@ -5,7 +5,7 @@
     <ul class="promo__list">
         <!--заполните этот список из массива категорий-->
         <li class="promo__item promo__item--boards">
-            <a class="promo__link" href="pages/all-lots.html">Имя категории</a>
+            <a class="promo__link" href="/">Имя категории</a>
         </li>
     </ul>
 </section>

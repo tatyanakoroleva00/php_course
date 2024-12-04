@@ -98,8 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = $form['name'];
         $message = $form['message'];
         $img_url = '';
+
         if(isset($_POST['img_url'])) {
         $img_url = $_POST['img_url'];
+        } else {
+            $img_url = '/img/avatars/avatar.jpg';
         }
 
         $sql = "INSERT INTO `users` SET `email` = '$email', `password` = '$hashed_password', `name` = '$name', `contacts` = '$message', `avatar` = '$img_url'";
