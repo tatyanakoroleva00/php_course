@@ -5,6 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 <form class="form form--add-lot container <?php echo !empty($errors) ? 'form--invalid' : '' ?>" action="../add.php"
       method="post" enctype="multipart/form-data"> <!-- form--invalid -->
+    <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
     <h2>Добавление лота</h2>
     <div class="form__container-two">
         <div class="form__item <?php echo isset($errors['category']) ? 'form__item--invalid' : ''; ?>">
@@ -17,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
         <div class="form__item <?php echo isset($errors['category']) ? 'form__item--invalid' : ''; ?>">
             <label for="category">Категория <sup>*</sup></label>
-            <select id="category" name="category">
+            <select id="category" name="category" required>
                 <option value="">Выберите категорию</option>
                 <option
                     value="Доски и лыжи" <?php echo $_POST['category'] === 'Доски и лыжи' ? 'selected' : ''; ?>>
@@ -55,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div
             class="form__item form__item--small <?php echo isset($errors['cur_price']) ? 'form__item--invalid' : ''; ?>">
             <label for="lot_rate">Начальная цена <sup>*</sup></label>
-            <input id="lot_rate" type="number" value="<?= $_POST['cur_price'] ?? ''; ?>" name="cur_price"
+            <input id="lot_rate" type="number" min="1" step="1" value="<?= $_POST['cur_price'] ?? ''; ?>" name="cur_price"
                    placeholder="0">
             <span
                 class="form__error"><?php echo isset($errors['cur_price']) ? 'Введите начальную цену' : '' ?></span>
@@ -63,18 +64,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div
             class="form__item form__item--small <?php echo isset($errors['lot_step']) ? 'form__item--invalid' : ''; ?>">
             <label for="lot-step">Шаг ставки <sup>*</sup></label>
-            <input id="lot-step" type="number" value="<?= $_POST['lot_step'] ?? ''; ?>" name="lot_step"
+            <input id="lot-step" type="number" min="1" step="1" value="<?= $_POST['lot_step'] ?? ''; ?>" name="lot_step"
                    placeholder="0">
             <span class="form__error"><?php echo isset($errors['lot_step']) ? 'Введите шаг ставки' : '' ?></span>
         </div>
         <div class="form__item <?php echo isset($errors['lot_date']) ? 'form__item--invalid' : ''; ?>">
             <label for="lot-date">Дата окончания торгов <sup>*</sup></label>
-            <input class="form__input-date" id="lot-date" value="<?= $_POST['lot_date'] ?? ''; ?>" type="text"
+            <input class="form__input-date" id="lot-date" value="<?= $_POST['lot_date'] ?? ''; ?>" type="date"
                    name="lot_date" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
             <span
                 class="form__error"><?php echo isset($errors['lot_date']) ? 'Введите дату завершения торгов' : '' ?></span>
         </div>
     </div>
-    <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
     <button type="submit" class="button">Добавить лот</button>
 </form>

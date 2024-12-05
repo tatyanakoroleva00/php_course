@@ -46,7 +46,7 @@ if (isset($_GET['id'])) {
 
         foreach ($chosen_lot as $row => $elem) {
             $lot_name = $elem['name'];
-            $lot_message = $elem['id'];
+            $lot_message = $elem['lot_message'];
             $img_url = $elem['img_url'];
             $lot_rate = $elem['lot_rate'];
             $lot_date = $elem['lot_date'];
@@ -63,7 +63,7 @@ if (isset($_GET['id'])) {
         $page_content = include_template('lot.php', [
             'chosen_lot' => $chosen_lot,
             'lot_name' => $lot_name,
-            'message' => $lot_message,
+            'lot_message' => $lot_message,
             'img_url' => $img_url,
             'lot_date' => $lot_date,
             'lot_rate' => $lot_rate,

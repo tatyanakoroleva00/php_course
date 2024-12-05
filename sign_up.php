@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!count($errors)) {
             move_uploaded_file($tmp_name, $file_path . $file_name);
-            $_POST['img_url'] = '$file_url';
+            $_POST['img_url'] = "$file_url";
         }
     } else {
         echo "Файл не был загружен.";
