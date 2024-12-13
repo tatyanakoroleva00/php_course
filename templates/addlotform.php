@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <input class="form__input-date" id="lot-date" value="<?= $_POST['lot_date'] ?? ''; ?>" type="date"
                    name="lot_date" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
             <span
-                class="form__error"><?php echo isset($errors['lot_date']) ? 'Введите дату завершения торгов' : '' ?></span>
+                class="form__error"><?php echo isset($errors['lot_date']) ? $errors['lot_date'] : '' ?></span>
         </div>
     </div>
     <button type="submit" class="button">Добавить лот</button>

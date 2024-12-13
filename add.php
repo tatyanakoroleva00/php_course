@@ -10,14 +10,14 @@ $title = 'Добавить лот';
 session_start();
 
 /*1*/
-//ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ АВТОРИЗОВАН, запретить доступ к странице с добавление лота
+# ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ АВТОРИЗОВАН, запретить доступ к странице с добавление лота
 if (!isset($_SESSION['user'])) {
     http_response_code(403);
     echo "Доступ запрещен";
 }
 else {
     /*2*/
-    //ЕСЛИ ПОЛЬЗОВАТЕЛЬ АВТОРИЗОВАН и отправка нового лота не совершена
+    # ЕСЛИ ПОЛЬЗОВАТЕЛЬ АВТОРИЗОВАН и отправка нового лота не совершена
     if(empty($_POST)) {
         $page_content = include_template('addlotform.php', []);
     } else {
@@ -33,7 +33,7 @@ else {
             'lot_date' => 'Дата завершения торгов'];
 
         /*3*/
-        //Проверка на наличие пустых полей - и где конкретно.
+        # Проверка на наличие пустых полей - и где конкретно.
         foreach ($_POST as $key => $value) {
             if (in_array($key, $required)) {
                 if (!$value) {
@@ -50,8 +50,23 @@ else {
                         }
                     };
                     if($key === 'lot_date') {
-                        $errors[$key] = 'stop';
+//                        $errors[$key] = 'stop';
+                        # Установите нужный часовой пояс
+                        date_default_timezone_set('Europe/Moscow');
 
+                        # Получаем текущую дату.
+                        $currentDateStr = date('Y-m-d');
+
+                        # Вычисляем дату следующего дня после текущей даты.
+                        $nextDayTimestamp = strtotime($currentDateStr . ' +1 day');
+
+                        # Преобразуем строку даты в метку времени
+                        $timestamp = strtotime($value);
+
+                        # Сверяем даты
+                        if($timestamp < $nextDayTimestamp) {
+                            $errors[$key] = 'Дата должна быть больше текущей даты хотя бы на один день';
+                        }
 
                     }
                 }
