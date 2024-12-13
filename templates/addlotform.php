@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
         <div class="form__item <?php echo isset($errors['category']) ? 'form__item--invalid' : ''; ?>">
             <label for="category">Категория <sup>*</sup></label>
-            <select id="category" name="category" required>
+            <select id="category" name="category">
                 <option value="">Выберите категорию</option>
                 <option
                     value="Доски и лыжи" <?php echo $_POST['category'] === 'Доски и лыжи' ? 'selected' : ''; ?>>

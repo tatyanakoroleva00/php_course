@@ -5,21 +5,23 @@ require_once 'lots_list.php';
 require_once 'categories.php';
 require_once 'init.php';
 require_once 'vendor/autoload.php';
+$title = 'Добавить лот';
 
 session_start();
 
-$title = 'Добавить лот';
+/*1*/
 //ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ АВТОРИЗОВАН, запретить доступ к странице с добавление лота
 if (!isset($_SESSION['user'])) {
     http_response_code(403);
     echo "Доступ запрещен";
-} else {
-
-    //Если пользователь авторизован и отправка нового лота совершена
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-        $lot = $_POST;
-
+}
+else {
+    /*2*/
+    //ЕСЛИ ПОЛЬЗОВАТЕЛЬ АВТОРИЗОВАН и отправка нового лота не совершена
+    if(empty($_POST)) {
+        $page_content = include_template('addlotform.php', []);
+    } else {
+        $errors = [];
         $required = ['lot_name', 'category', 'lot_message', 'img_url', 'cur_price', 'lot_step', 'lot_date'];
         $dict = [
             'lot_name' => 'Название лота',
@@ -29,26 +31,30 @@ if (!isset($_SESSION['user'])) {
             'cur_price' => 'Начальная цена',
             'lot_step' => 'Ставка',
             'lot_date' => 'Дата завершения торгов'];
-        $errors = [];
 
+        /*3*/
         //Проверка на наличие пустых полей - и где конкретно.
         foreach ($_POST as $key => $value) {
             if (in_array($key, $required)) {
                 if (!$value) {
                     $errors[$key] = 'Это поле надо заполнить!';
-                }
-            } else {
-                if ($key === 'cur_price') {
-                    if (!(filter_var($key, FILTER_VALIDATE_INT) !== false) && !($key > 0)) {
-                        $errors[$key] = "Ошибка: пожалуйста, введите целое число.";
-                    }
-                };
-                if ($key === 'lot_step') {
-                    if (!(filter_var($key, FILTER_VALIDATE_INT) !== false) && !($key > 0)) {
-                        $errors[$key] = "Ошибка: пожалуйста, введите целое число.";
-                    }
-                };
+                } else {
+                    if ($key === 'cur_price') {
+                        if (!(filter_var($value, FILTER_VALIDATE_INT) !== false) && !($value > 0)) {
+                            $errors[$key] = "Ошибка: пожалуйста, введите целое число.";
+                        }
+                    };
+                    if ($key === 'lot_step') {
+                        if (!(filter_var($value, FILTER_VALIDATE_INT) !== false) && !(+$value > 0)) {
+                            $errors[$key] = "Ошибка: пожалуйста, введите целое число.";
+                        }
+                    };
+                    if($key === 'lot_date') {
+                        $errors[$key] = 'stop';
 
+
+                    }
+                }
             }
         }
 
@@ -65,9 +71,9 @@ if (!isset($_SESSION['user'])) {
 
             // Проверка, является ли MIME-тип допустимым
             if (in_array($fileMimeType, $allowedMimeTypes)) {
-                echo "Файл является допустимым изображением.";
+//                echo "Файл является допустимым изображением.";
             } else {
-                echo "Файл не является допустимым изображением.";
+//                echo "Файл не является допустимым изображением.";
                 $errors['image'] = 'Файл не является допустимым изображением.';
             }
 
@@ -88,14 +94,17 @@ if (!isset($_SESSION['user'])) {
         if (count($errors)) {
             $page_content = include_template('addlotform.php', [
                 'errors' => $errors,
-                'lot' => $lot,
+                'lot' => $_POST,
+
             ]);
+            echo 'Ошибки';
+            var_dump($errors);
         } //ОШИБОК НЕТ, ОТПРАВЛЯЕМ ДАННЫЕ В БД И ВЫВОДИМ
         else {
             //При изначальном добавлении лота $cur_price = $price у меня
             $formatted_cur_price = formattedPrice($_POST['cur_price']); //Отформатированная цена для публикации на странице
             $formatted_price = formattedPrice($_POST['cur_price']); //Отформатированная цена для публикации на странице
-//            $formatted_date = formattedDate($lot['lot_date']); //Отформатированная дата для публикации на странице
+//            $formatted_date = formattedDate($_POST['lot_date']); //Отформатированная дата для публикации на странице
 
 
             $name = $_POST['lot_name'];
@@ -132,11 +141,13 @@ if (!isset($_SESSION['user'])) {
 
                 if (mysqli_query($con, $query2)) {
                     echo 'Лот успешно добавлен!';
-                } else {
+                }
+
+
+
+                else {
                     echo "Ошибка добавления лота: " . mysqli_error($con);
                 }
-            } else {
-//                echo "Категория не найдена!";
             }
 
             //Находим номер id у созданного лота
@@ -162,13 +173,12 @@ if (!isset($_SESSION['user'])) {
                 'lot_step' => $lot_step,
                 'cur_price' => $_POST['cur_price'],
 //                'formatted_date' => $formatted_date,
-            'formatted_date' => $_POST['lot_date'],
+                'formatted_date' => $_POST['lot_date'],
                 'lot_id' => $lot_id,
             ]);
         }
-    } else {
-        $page_content = include_template('addlotform.php', []);
     }
+
 
 
     $layout_content = include_template('layout.php', [
