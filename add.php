@@ -6,6 +6,7 @@ require_once 'categories.php';
 require_once 'init.php';
 require_once 'vendor/autoload.php';
 $title = 'Добавить лот';
+$errors = [];
 
 session_start();
 
@@ -18,10 +19,9 @@ if (!isset($_SESSION['user'])) {
 else {
     /*2*/
     # ЕСЛИ ПОЛЬЗОВАТЕЛЬ АВТОРИЗОВАН и отправка нового лота не совершена
-    if(empty($_POST)) {
+    if (empty($_POST)) {
         $page_content = include_template('addlotform.php', []);
     } else {
-        $errors = [];
         $required = ['lot_name', 'category', 'lot_message', 'img_url', 'cur_price', 'lot_step', 'lot_date'];
         $dict = [
             'lot_name' => 'Название лота',
@@ -49,7 +49,7 @@ else {
                             $errors[$key] = "Ошибка: пожалуйста, введите целое число.";
                         }
                     };
-                    if($key === 'lot_date') {
+                    if ($key === 'lot_date') {
 //                        $errors[$key] = 'stop';
                         # Установите нужный часовой пояс
                         date_default_timezone_set('Europe/Moscow');
@@ -64,7 +64,7 @@ else {
                         $timestamp = strtotime($value);
 
                         # Сверяем даты
-                        if($timestamp < $nextDayTimestamp) {
+                        if ($timestamp < $nextDayTimestamp) {
                             $errors[$key] = 'Дата должна быть больше текущей даты хотя бы на один день';
                         }
 
@@ -73,8 +73,7 @@ else {
             }
         }
 
-        //ДОБАВЛЕНИЕ КАРТИНКИ
-
+        # Добавление картинки
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
             // Получение MIME-типа файла
             $fileMimeType = mime_content_type($_FILES['image']['tmp_name']);
@@ -105,17 +104,15 @@ else {
             echo "Файл не был загружен.";
         }
 
-        //ЕСТЬ ОШИБКИ В ФОРМЕ
+
+        # Ошибки в форме.
         if (count($errors)) {
             $page_content = include_template('addlotform.php', [
                 'errors' => $errors,
                 'lot' => $_POST,
-
             ]);
-            echo 'Ошибки';
             var_dump($errors);
-        } //ОШИБОК НЕТ, ОТПРАВЛЯЕМ ДАННЫЕ В БД И ВЫВОДИМ
-        else {
+        } else {
             //При изначальном добавлении лота $cur_price = $price у меня
             $formatted_cur_price = formattedPrice($_POST['cur_price']); //Отформатированная цена для публикации на странице
             $formatted_price = formattedPrice($_POST['cur_price']); //Отформатированная цена для публикации на странице
@@ -156,11 +153,7 @@ else {
 
                 if (mysqli_query($con, $query2)) {
                     echo 'Лот успешно добавлен!';
-                }
-
-
-
-                else {
+                } else {
                     echo "Ошибка добавления лота: " . mysqli_error($con);
                 }
             }
@@ -192,9 +185,8 @@ else {
                 'lot_id' => $lot_id,
             ]);
         }
+
     }
-
-
 
     $layout_content = include_template('layout.php', [
         'title' => $title,

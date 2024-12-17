@@ -10,21 +10,21 @@ session_start();
 if (isset($_GET['id'])) {
     $lot_id = $_GET['id'];
 
-    //**Добавление лотов в favourites для показа на странице history.php**
-    // Проверяем, существует ли массив избранных лотов в сессии
+    #1 --ДОБАВЛЕНИЕ ЛОТОВ В FAVOURITES ДЛЯ ПОКАЗА НА СТРАНИЦЕ HISTORY.PHP.
+
+    #Проверяем, существует ли массив избранных лотов в сессии
     if (!isset($_SESSION['favourite_lots'])) {
         $_SESSION['favourite_lots'] = [];
     }
 
-    // Добавляем текущий лот в массив избранных, если его там еще нет
+    #Добавляем текущий лот в массив избранных, если его там еще нет
     if (!in_array($lot_id, $_SESSION['favourite_lots'])) {
         $_SESSION['favourite_lots'][] = $lot_id;
     }
 
-    // Здесь можно вывести информацию о лоте
-//    echo "<p>Вы просматриваете лот с ID: $lot_id</p>";
+    #2 -- ВЫВОД ЛОТА НА СТРАНИЦЕ
 
-    //Делаем запрос в БД, ищем лот по id
+    #Делаем запрос в БД, ищем лот по id. Соединяем две таблицы вместе по id.
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
         FROM `lot`
         JOIN category ON lot.category_id = category.id
@@ -33,16 +33,6 @@ if (isset($_GET['id'])) {
     $chosen_lot = mysqli_query($con, $query);
 
     if ($chosen_lot && mysqli_num_rows($chosen_lot) > 0) {
-
-        $name = '';
-        $lot_message = '';
-        $img_url = '';
-        $lot_rate = '';
-        $lot_date = '';
-        $lot_step = '';
-        $price = '';
-        $cur_price = '';
-        $category_name = '';
 
         foreach ($chosen_lot as $row => $elem) {
             $lot_name = $elem['name'];
@@ -56,6 +46,7 @@ if (isset($_GET['id'])) {
             $category_name = $elem['category_name'];
         }
 
+        # Лот - ставка
         if (isset($_POST['lot_rate'])) {
             $lot_rate = $_POST['lot_rate'];
         }
@@ -92,14 +83,14 @@ if (isset($_GET['id'])) {
                 }
                 $data[] = $lot_rate;
 
-                // Обновление данных в базе
+                // Обновление данных по лоту в базе
                 $json_data = mysqli_real_escape_string($con, json_encode($data));
 
                 $update_query = "UPDATE lot SET lot_rate = '$json_data', cur_price = '$cur_price' WHERE id = '$lot_id'";
 
                 if (mysqli_query($con, $update_query)) {
                     echo "Данные успешно обновлены!";
-                    header("Location: " . $_SERVER['REQUEST_URI']);exit;
+                    header("Location: " . $_SERVER['REQUEST_URI']); exit;
                 } else {
                     echo "Ошибка обновления: " . mysqli_error($con);
                 }

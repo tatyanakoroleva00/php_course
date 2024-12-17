@@ -277,7 +277,7 @@ main.container {
   float: left;
 }
 .user-menu__logged a:last-child{
-  margin: 0 0 0 0;
+  margin-left: 0;
   font-weight: bold;
   color: #3838f3;
 }
@@ -921,7 +921,10 @@ input:invalid .form__error{
 }
 
 /* Страница лота */
-
+.lot-col {
+  display: flex;
+  flex-direction: column;
+}
 .lot-item {
   padding-top: 50px;
 }
@@ -966,25 +969,31 @@ input:invalid .form__error{
   transform: translate(-50%, -50%);
 }
 
-.lot-item__category {
-  margin: 20px 0 12px;
-  font-size: 13px;
-}
+/*.lot-item__category {*/
+/*  !*margin: 20px 0 12px;*!*/
+/*  font-size: 13px;*/
+/*}*/
+
+
 
 .lot-item__category span {
   color: #879296;
 }
 
-.lot-item__description {
+.lot-item__description,
+.lot-item__name,
+.lot-item__category {
+  font-size: 13px;
   margin: 0;
-  font-weight: 400;
+  font-weight: bold;
 }
 
 .lot-item__state {
   padding: 30px;
   background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
 }
-
 .lot-item__timer {
   -webkit-align-self: flex-end;
   -ms-flex-item-align: end;
@@ -1016,11 +1025,11 @@ input:invalid .form__error{
   font-weight: 700;
 }
 
-.lot-item__min-cost {
-  -webkit-align-self: flex-end;
-  -ms-flex-item-align: end;
-  align-self: flex-end;
-}
+/*.lot-item__min-cost {*/
+/*  -webkit-align-self: flex-end;*/
+/*  -ms-flex-item-align: end;*/
+/*  !*align-self: flex-end;*!*/
+/*}*/
 
 .lot-item__form {
   display: -webkit-flex;
@@ -1029,7 +1038,17 @@ input:invalid .form__error{
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  margin-top: 17px;
+  /*margin-top: 17px;*/
+  flex-direction: column;
+  max-width: 30%;
+  gap: 1rem;
+}
+.lot-item__form label {
+  font-weight: bold;
+}
+.lot-item__form form,
+.lot-item__form div {
+  float: left;
 }
 
 .lot-item__form-item {
@@ -1057,12 +1076,13 @@ input:invalid .form__error{
 }
 
 .lot-item__form .button {
-  -webkit-align-self: flex-end;
-  -ms-flex-item-align: end;
-  align-self: flex-end;
+  /*-webkit-align-self: flex-end;*/
+  /*-ms-flex-item-align: end;*/
+  /*align-self: flex-end;*/
   padding: 6px 20px 7px;
   height: 38px;
 }
+
 
 /* История ставок */
 
