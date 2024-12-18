@@ -1,5 +1,7 @@
 <?php
-if(isset($_SESSION)) print_r($_SESSION['user']['id']);
+if(isset($_SESSION)) print_r($_SESSION);
+if (isset($_POST)) print_r($_POST);
+
 ?>
 
 <section class="lot-item container">
@@ -17,6 +19,8 @@ if(isset($_SESSION)) print_r($_SESSION['user']['id']);
                     <span><?= $category_name; ?></span></p>
                 <p class="lot-item__description"><b style="font-size: 14px;">Описание:</b>
                     <span><?= $lot_message ?? '' ?></span></p>
+                <p><b style="font-size: 14px;">Контакты:</b>
+<!--                    <span>--><?//=  ?><!--</span></p>-->
 
             </div>
             <?php if (isset($_SESSION['user'])) : ?>
@@ -54,12 +58,28 @@ if(isset($_SESSION)) print_r($_SESSION['user']['id']);
         <div class="lot-col">
             <h3>История ставок (<span>10</span>)</h3>
             <table class="history__list">
-                <tr class="history__item">
-                    <td class="history__name">Иван</td>
-                    <td class="history__price">10 999 р</td>
-                    <td class="history__time">5 минут назад</td>
-                </tr>
 
+                <?php
+                $query6 = "
+                SELECT lot_id, user_id, rate_date, user.id
+                FROM rate, users
+                INNER JOIN users ON user.id = users.id;";
+
+                $result = mysqli_query($con, $query6);
+
+
+                if (mysqli_num_rows($result) > 0) {
+                    echo "<table class='history__list'>";
+
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr class='history__item'>
+                    <td class='history__name'>" . $row['user_id'] . "</td>
+                    <td class='history__price'>" . $row['price'] . "</td>
+                    <td class='history__time'>" . $row['rate_date'] . "</td>
+                </tr>";
+                    }
+                }
+               ?>
             </table>
         </div
 

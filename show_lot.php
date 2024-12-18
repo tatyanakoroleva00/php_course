@@ -7,6 +7,7 @@ require_once 'vendor/autoload.php';
 
 session_start();
 
+
 if (isset($_GET['id'])) {
     $lot_id = $_GET['id'];
 
@@ -33,7 +34,6 @@ if (isset($_GET['id'])) {
     $chosen_lot = mysqli_query($con, $query);
 
     if ($chosen_lot && mysqli_num_rows($chosen_lot) > 0) {
-
         foreach ($chosen_lot as $row => $elem) {
             $lot_name = $elem['name'];
             $lot_message = $elem['lot_message'];
@@ -46,9 +46,9 @@ if (isset($_GET['id'])) {
             $category_name = $elem['category_name'];
         }
 
-        # Лот - ставка
-        if (isset($_POST['lot_rate'])) {
-            $lot_rate = $_POST['lot_rate'];
+        # Ищем контактные данные разместившего лот
+        if (isset($_GET)) {
+            $current_id = $_GET['id'];
         }
 
         $page_content = include_template('lot.php', [
@@ -57,63 +57,71 @@ if (isset($_GET['id'])) {
             'lot_message' => $lot_message,
             'img_url' => $img_url,
             'lot_date' => $lot_date,
-            'lot_rate' => $lot_rate,
+            'lot_rate' => $_POST['lot_rate'],
             'lot_step' => $lot_step,
             'price' => $price,
             'cur_price' => $cur_price,
             'category_name' => $category_name,
             'lot_id' => $lot_id,
+            'con' => $con,
         ]);
 
+        # Делаем запрос по айди лота к БД, находим лот, его стоимость и мин.ставку. Меняем цену на лот
         if (isset($_POST['lot_rate'])) {
             $lot_rate = $_POST['lot_rate'];
             $query = "SELECT lot_rate, cur_price from lot WHERE id = '$lot_id'";
             $result = mysqli_query($con, $query);
             $cur_price = $lot_rate + $cur_price;
+            $user_id = $_SESSION['user']['id'];
 
             if ($result && mysqli_num_rows($result) > 0 && ($lot_rate > $lot_step || $lot_rate == $lot_step)) {
                 $row = mysqli_fetch_assoc($result);
                 $data = json_decode($row['lot_rate'], true);
 
-                print_r($data);
-
-                // Добавление нового значения
+                # Добавление нового значения
                 if (!is_array($data)) {
                     $data = [];
                 }
                 $data[] = $lot_rate;
 
-                // Обновление данных по лоту в базе
+                # Обновление данных по лоту в БД
                 $json_data = mysqli_real_escape_string($con, json_encode($data));
+                $query2 = "UPDATE lot SET lot_rate = '$json_data', cur_price = '$cur_price' WHERE id = '$lot_id'";
 
-                $update_query = "UPDATE lot SET lot_rate = '$json_data', cur_price = '$cur_price' WHERE id = '$lot_id'";
-
-                if (mysqli_query($con, $update_query)) {
-                    echo "Данные успешно обновлены!";
-                    header("Location: " . $_SERVER['REQUEST_URI']); exit;
+                if (mysqli_query($con, $query2)) {
+                    echo "Ставки добавлены";
+//                    header("Location: " . $_SERVER['REQUEST_URI']);
+//                    exit;
                 } else {
                     echo "Ошибка обновления: " . mysqli_error($con);
                 }
 
+                # Добавление данных в таблицу rate
+                $query3 = "INSERT INTO rate (lot_id, price, user_id) VALUES ('$lot_id', '$lot_rate', '$user_id')";
 
+                if(mysqli_query($con, $query3)) {
+                    echo 'all is ok';
+                    header("Location: " . $_SERVER['REQUEST_URI']);
+                    exit;
+                } else {
+                    echo "Ошибка обновления: " . mysqli_error($con);
+                }
             }
-
         }
-
-    } else {
-//        echo "Ошибка добавления лота: " . mysqli_error($con);
-            http_response_code(404);
-            $page_content = '<h1>Ошибка 404: Страница не найдена</h1>';
-        }
+    } # Ошибка добавления лота
+    else {
+        http_response_code(404);
+        $page_content = '<h1>Ошибка 404: Страница не найдена</h1>';
+    }
 }
 
-    $layout_content = include_template('layout.php', [
-        'title' => 'Лот',
-        'content' => $page_content,
-        'categories' => $categories,
-    ]);
+$layout_content = include_template('layout.php', [
+    'title' => 'Лот',
+    'content' => $page_content,
+    'categories' => $categories,
+]);
 
-    print_r($layout_content);
+print_r($layout_content);
 
 
 
