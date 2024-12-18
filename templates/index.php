@@ -33,7 +33,7 @@
                             <span class="lot__cost"><?=$elem['price']?><b class="rub">р</b></span>
                         </div>
                         <div class="lot__timer timer">
-                            <?php echo $elem['lot_date']?>
+                            <?php echo formattedDate($elem['lot_date']);?>
                     </div>
                 </div>
             </li>

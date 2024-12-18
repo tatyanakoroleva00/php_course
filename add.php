@@ -10,6 +10,10 @@ $errors = [];
 
 session_start();
 
+if(isset($_POST)) {
+    print_r($_POST);
+}
+
 /*1*/
 # ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ АВТОРИЗОВАН, запретить доступ к странице с добавление лота
 if (!isset($_SESSION['user'])) {
@@ -151,39 +155,21 @@ else {
                 `lot_step` = '$lot_step', `category_id` = '$category_id', `price` = '$price', `lot_date` = '$lot_date', `lot_rate` = 0, `cur_price` = '$price',
                 `user_id` = '$user_id'";
 
+                // SQL-запрос для получения последнего добавленного товара
+                $sql = "SELECT id FROM lot ORDER BY id DESC LIMIT 1"; // Предполагается, что таблица называется 'products' и у нее есть поле 'id'
+
                 if (mysqli_query($con, $query2)) {
                     echo 'Лот успешно добавлен!';
+                    // Получение ID последней вставленной записи
+                    $last_id = mysqli_insert_id($con);
+
+                    // Переадресация на страницу с созданным лотом
+                    header("Location: show_lot.php?id=" . $last_id);
+                    exit();
                 } else {
                     echo "Ошибка добавления лота: " . mysqli_error($con);
                 }
             }
-
-            //Находим номер id у созданного лота
-            $user_id = $_SESSION['user']['id'];
-
-            $query3 = "SELECT id FROM lot
-            WHERE user_id = $user_id
-            ORDER BY created_at DESC LIMIT 1";
-
-            $result3 = mysqli_query($con, $query3);
-
-            if ($result3 && mysqli_num_rows($result3) > 0) {
-                $row = mysqli_fetch_assoc($result3);
-                $lot_id = $row['id'];
-                print_r($lot_id);
-            }
-
-            $page_content = include_template('lot.php', [
-                'lot_name' => $name,
-                'lot_category' => $category,
-                'img_url' => $img_url,
-                'lot_message' => $lot_message,
-                'lot_step' => $lot_step,
-                'cur_price' => $_POST['cur_price'],
-//                'formatted_date' => $formatted_date,
-                'formatted_date' => $_POST['lot_date'],
-                'lot_id' => $lot_id,
-            ]);
         }
 
     }

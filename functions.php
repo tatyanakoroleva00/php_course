@@ -41,3 +41,28 @@ function formattedPrice($arg)
         return number_format($rounded_number, 0, ' ', ' ');
     }
 }
+
+function humanReadableTimeDifference($datetime) {
+    $timestamp = strtotime($datetime);
+    $currentTime = time();
+    $timeDifference = $currentTime - $timestamp;
+
+    if ($timeDifference < 60) {
+        return $timeDifference . " секунд назад";
+    } elseif ($timeDifference < 3600) {
+        $minutes = floor($timeDifference / 60);
+        return $minutes . " минут" . ($minutes == 1 ? "а" : "") . " назад";
+    } elseif ($timeDifference < 86400) {
+        $hours = floor($timeDifference / 3600);
+        return $hours . " час" . ($hours == 1 ? "" : ($hours < 5 ? "а" : "ов")) . " назад";
+    } elseif ($timeDifference < 2592000) {
+        $days = floor($timeDifference / 86400);
+        return $days . " день" . ($days == 1 ? "" : ($days < 5 ? "я" : "ей")) . " назад";
+    } elseif ($timeDifference < 31104000) {
+        $months = floor($timeDifference / 2592000);
+        return $months . " месяц" . ($months == 1 ? "" : ($months < 5 ? "а" : "ев")) . " назад";
+    } else {
+        $years = floor($timeDifference / 31104000);
+        return $years . " год" . ($years == 1 ? "" : ($years < 5 ? "а" : "лет")) . " назад";
+    }
+}

@@ -46,26 +46,6 @@ if (isset($_GET['id'])) {
             $category_name = $elem['category_name'];
         }
 
-        # Ищем контактные данные разместившего лот
-        if (isset($_GET)) {
-            $current_id = $_GET['id'];
-        }
-
-        $page_content = include_template('lot.php', [
-            'chosen_lot' => $chosen_lot,
-            'lot_name' => $lot_name,
-            'lot_message' => $lot_message,
-            'img_url' => $img_url,
-            'lot_date' => $lot_date,
-            'lot_rate' => $_POST['lot_rate'],
-            'lot_step' => $lot_step,
-            'price' => $price,
-            'cur_price' => $cur_price,
-            'category_name' => $category_name,
-            'lot_id' => $lot_id,
-            'con' => $con,
-        ]);
-
         # Делаем запрос по айди лота к БД, находим лот, его стоимость и мин.ставку. Меняем цену на лот
         if (isset($_POST['lot_rate'])) {
             $lot_rate = $_POST['lot_rate'];
@@ -108,6 +88,57 @@ if (isset($_GET['id'])) {
                 }
             }
         }
+
+        # Ищем контактные данные разместившего лот
+        if (isset($_GET)) {
+            $current_id = $_GET['id'];
+            echo $current_id;
+
+            $query_search_user = "SELECT lot.id, user_id, users.id, users.name, users.contacts
+            FROM lot
+            JOIN users ON lot.user_id = users.id
+            WHERE lot.id = '$current_id' ";
+
+            $result = mysqli_query($con, $query_search_user);
+            $row = mysqli_fetch_assoc($result);
+
+        }
+            # Количество ставок, сделанных по лоту
+
+            $sql_count_rates = "SELECT COUNT(*) as count
+                        FROM rate
+                        WHERE lot_id = '$lot_id';";
+
+            $count_rates = mysqli_query($con, $sql_count_rates);
+
+            if ($count_rates) {
+                $count_rows = mysqli_fetch_assoc($count_rates);
+                $rates_number = $count_rows['count'];
+            } else {
+                $rates_number = 0;
+            }
+
+
+        $page_content = include_template('lot.php', [
+            'chosen_lot' => $chosen_lot,
+            'lot_name' => $lot_name,
+            'lot_message' => $lot_message,
+            'img_url' => $img_url,
+            'lot_date' => $lot_date,
+            'lot_rate' => $_POST['lot_rate'],
+            'lot_step' => $lot_step,
+            'price' => $price,
+            'cur_price' => $cur_price,
+            'category_name' => $category_name,
+            'lot_id' => $lot_id,
+            'con' => $con,
+            'humanReadableTimeDifference' => $humanReadableTimeDifference,
+            'user_name' => $row['name'],
+            'contacts' => $row['contacts'],
+            'user_id' => $row['user_id'],
+            'rates_number' => $rates_number,
+        ]);
+
     } # Ошибка добавления лота
     else {
         http_response_code(404);

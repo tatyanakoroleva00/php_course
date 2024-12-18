@@ -1,9 +1,4 @@
-<?php
-if(isset($_SESSION)) print_r($_SESSION);
-if (isset($_POST)) print_r($_POST);
-
-?>
-
+<?php print_r($_SESSION); ?>
 <section class="lot-item container">
     <h2><?= $lot_name ?? ''; ?></h2>
     <div class="lot-item__content">
@@ -20,23 +15,19 @@ if (isset($_POST)) print_r($_POST);
                 <p class="lot-item__description"><b style="font-size: 14px;">Описание:</b>
                     <span><?= $lot_message ?? '' ?></span></p>
                 <p><b style="font-size: 14px;">Контакты:</b>
-<!--                    <span>--><?//=  ?><!--</span></p>-->
+                    <span><?= $user_name . ', ' . $contacts ?? '' ?></span></p>
 
             </div>
             <?php if (isset($_SESSION['user'])) : ?>
-                <div>
-                    <div class="lot-item__state">
-                        <div>
-                            <p class="rates__title">Добавить ставку</p>
-                            <span class="lot-item__timer timer"><?= formattedDate($lot_date) ?></span>
-                            <div class="lot-item__cost-state">
-                                <div class="lot-item__rate">
-                                    <span class="lot-item__amount">Текущая цена</span>
-                                    <span class="lot-item__cost"><?= $cur_price; ?><b class="rub">р</b></span>
-                                </div>
-                            </div>
-                        </div>
+
+                <?php
+                # Если не текущий пользователь создал лот и дата истечения срока лота больше текущей
+                if (($user_id !== $_SESSION['user']['id']) && (strtotime($lot_date) > strtotime(date('Y-m-d')))): ?>
+                    <div>
+                        <div class="lot-item__state">
+
                             <form class="lot-item__form" action='show_lot.php?id=<?= $lot_id; ?>' method="post">
+                                <p class="rates__title">Добавить ставку</p>
                                 <p class="lot-item__form-item form__item form__item--invalid">
                                     <label for="cost">Ваша cумма:</label>
                                     <input id="cost" type="text" name="lot_rate" placeholder="0"
@@ -50,36 +41,55 @@ if (isset($_POST)) print_r($_POST);
 
                         </div>
 
-                </div>
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
 
         <!--        Right column-->
         <div class="lot-col">
-            <h3>История ставок (<span>10</span>)</h3>
-            <table class="history__list">
+            <h3>Информация торгов</h3>
+            <h4>Торги</h4>
 
+            <div>
+                <span class="lot-item__timer timer"><?= $lot_date; ?></span>
+                <div class="lot-item__cost-state">
+                    <div class="lot-item__rate">
+                        <span class="lot-item__amount">Текущая цена</span>
+                        <span class="lot-item__cost"><?= $cur_price; ?><b class="rub">р</b></span>
+                    </div>
+                </div>
+            </div>
+
+            <p>Общее количество ставок: <?= $rates_number; ?></p>
+
+
+            <h4>История торгов (<span>10</span>)</h4>
+            <table class="history__list">
                 <?php
-                $query6 = "
-                SELECT lot_id, user_id, rate_date, user.id
-                FROM rate, users
-                INNER JOIN users ON user.id = users.id;";
+                $query6 = "SELECT rate.rate_date, rate.price, users.name AS users_name
+                FROM rate
+                INNER JOIN users ON rate.user_id = users.id
+                ORDER BY rate.rate_date DESC
+                LIMIT 10;";
 
                 $result = mysqli_query($con, $query6);
-
 
                 if (mysqli_num_rows($result) > 0) {
                     echo "<table class='history__list'>";
 
                     while ($row = mysqli_fetch_assoc($result)) {
+                        $dateLot = $row['rate_date'];
+                        $dateLot2 = humanReadableTimeDifference($row['rate_date']);
+
                         echo "<tr class='history__item'>
-                    <td class='history__name'>" . $row['user_id'] . "</td>
-                    <td class='history__price'>" . $row['price'] . "</td>
-                    <td class='history__time'>" . $row['rate_date'] . "</td>
+                    <td class='history__name'>" . $row['price'] . "</td>
+                    <td class='history__price'>" . $row['users_name'] . "</td>
+                    <td class='history__time'>" . $dateLot2 . "</td>
                 </tr>";
                     }
                 }
-               ?>
+                ?>
             </table>
         </div
 
