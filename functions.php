@@ -27,8 +27,7 @@ function formattedDate($date) {
     $left_time_in_seconds = $finish_date - $cur_time;
     $hours = floor($left_time_in_seconds / 3600);
     $minutes = floor(($left_time_in_seconds % 3600) / 60);
-//    print("{$hours}Ч : {$minutes}М");
-    return("{$hours}Ч : {$minutes}М");
+    return("{$hours}ч : {$minutes}м");
 }
 
 //$expiration_date = formattedDate("11.11.2024");
@@ -57,7 +56,7 @@ function humanReadableTimeDifference($datetime) {
         return $hours . " час" . ($hours == 1 ? "" : ($hours < 5 ? "а" : "ов")) . " назад";
     } elseif ($timeDifference < 2592000) {
         $days = floor($timeDifference / 86400);
-        return $days . " день" . ($days == 1 ? "" : ($days < 5 ? "я" : "ей")) . " назад";
+        return $days . " д" . ($days == 1 ? "ень" : ($days < 5 ? "ня" : "ней")) . " назад";
     } elseif ($timeDifference < 31104000) {
         $months = floor($timeDifference / 2592000);
         return $months . " месяц" . ($months == 1 ? "" : ($months < 5 ? "а" : "ев")) . " назад";

@@ -1,7 +1,6 @@
 <?php
 
 require_once 'functions.php';
-require_once 'lots_list.php';
 require_once 'categories.php';
 require_once 'init.php';
 require_once 'vendor/autoload.php';
@@ -9,10 +8,6 @@ $title = 'Добавить лот';
 $errors = [];
 
 session_start();
-
-if(isset($_POST)) {
-    print_r($_POST);
-}
 
 /*1*/
 # ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ АВТОРИЗОВАН, запретить доступ к странице с добавление лота
@@ -133,10 +128,6 @@ else {
 
             //Преобразование даты из формата 11.11.2024 в формат 2024-11-11 для БД
             $originalDate = $_POST['lot_date'];
-            // Создаем объект DateTime из строки с указанным форматом
-//            $dateTime = DateTime::createFromFormat('d.m.Y', $originalDate);
-            // Преобразуем дату в формат YYYY-MM-DD
-//            $lot_date = $dateTime->format('Y-m-d');
 
             $lot_date = $_POST['lot_date'];
 

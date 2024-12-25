@@ -1,10 +1,9 @@
-<?php print_r($_SESSION); ?>
 <section class="lot-item container">
     <h2><?= $lot_name ?? ''; ?></h2>
     <div class="lot-item__content">
         <!--        Left column-->
-        <div class="lot-col">
-            <div>
+        <div class="lot-col left">
+            <div class="description">
                 <div class="lot-item__image">
                     <img src='../<?= $img_url ?? ''; ?>' width="730" height="548" alt="<? $lot_name ?? '' ?>">
                 </div>
@@ -25,18 +24,33 @@
                 if (($user_id !== $_SESSION['user']['id']) && (strtotime($lot_date) > strtotime(date('Y-m-d')))): ?>
                     <div>
                         <div class="lot-item__state">
-
                             <form class="lot-item__form" action='show_lot.php?id=<?= $lot_id; ?>' method="post">
-                                <p class="rates__title">Добавить ставку</p>
-                                <p class="lot-item__form-item form__item form__item--invalid">
-                                    <label for="cost">Ваша cумма:</label>
-                                    <input id="cost" type="text" name="lot_rate" placeholder="0"
-                                           value="<?php echo isset($_POST['lot_rate']) ? $_POST['lot_rate'] : ''; ?>">
-                                </p>
-                                <button type="submit" class="button">Разместить ставку</button>
-                                <div class="lot-item__min-cost">
-                                    Мин. ставка <span><?= $lot_step; ?>р</span>
+                                <?php
+                                $sql = "SELECT *
+                                FROM rate
+                                WHERE rate.lot_id = '$lot_id'
+                                ORDER BY rate_date DESC
+                                LIMIT 1;";
+
+                                $result = mysqli_query($con, $sql);
+                                    $row = mysqli_fetch_assoc($result); ?>
+                                        <div>
+                                            <p class="rates__title">Добавить ставку</p>
+                                            <p class="lot-item__form-item form__item form__item--invalid">
+                                            <label for="cost">Ваша cумма:</label>
+                                            <input id="cost" type="text" name="lot_rate" placeholder="0"
+                                                       value="<?php echo isset($_POST['lot_rate']) ? $_POST['lot_rate'] : ''; ?>">
+                                            </p>
+                                            <p style="color:red;"><?= $errors; ?></p>
+                                        </div>
+                                <div>
+                                    <button type="submit" class="button">Разместить ставку</button>
+                                    <div class="lot-item__min-cost">
+                                        Мин. ставка <span><?= $lot_step; ?>р</span>
+                                    </div>
                                 </div>
+
+
                             </form>
 
                         </div>
@@ -49,8 +63,8 @@
         <!--        Right column-->
         <div class="lot-col">
             <h3>Информация торгов</h3>
+            <h4><b><a href="/my_bets.php">Мои ставки тут</a></b></h4>
             <h4>Торги</h4>
-
             <div>
                 <span class="lot-item__timer timer"><?= $lot_date; ?></span>
                 <div class="lot-item__cost-state">
@@ -62,12 +76,10 @@
             </div>
 
             <p>Общее количество ставок: <?= $rates_number; ?></p>
-
-
             <h4>История торгов (<span>10</span>)</h4>
             <table class="history__list">
                 <?php
-                $query6 = "SELECT rate.rate_date, rate.price, users.name AS users_name
+                $query6 = "SELECT rate.rate_date, rate.lot_id, rate.price, users.name AS users_name
                 FROM rate
                 INNER JOIN users ON rate.user_id = users.id
                 ORDER BY rate.rate_date DESC
@@ -84,6 +96,7 @@
 
                         echo "<tr class='history__item'>
                     <td class='history__name'>" . $row['price'] . "</td>
+                    <td class='history__price'>" . $row['lot_id'] . "</td>
                     <td class='history__price'>" . $row['users_name'] . "</td>
                     <td class='history__time'>" . $dateLot2 . "</td>
                 </tr>";

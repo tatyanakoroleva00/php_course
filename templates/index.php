@@ -5,9 +5,15 @@
     <ul class="promo__list">
 
         <!--заполните этот список из массива категорий-->
-        <li class="promo__item promo__item--boards">
-            <a class="promo__link" href="/">Имя категории</a>
-        </li>
+        <?php
+        foreach($categories_query as $row=> $elem) {
+            $name_eng = $elem['name_eng'];
+            ;?>
+
+            <li class="promo__item promo__item--boards">
+                <a class="promo__link" href="category.php?category=<?=$name_eng?>"><?=$elem['name'];?> </a>
+            </li>
+        <?php } ?>
     </ul>
 </section>
 <section class="lots">

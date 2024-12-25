@@ -19,8 +19,11 @@ $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot
 
 $lots_list = mysqli_query($con, $query);
 
+$query2 = "SELECT * FROM category";
+$categories_query = mysqli_query($con, $query2);
+
 $page_content = include_template('index.php', [
-   'categories' => $categories,
+   'categories_query' => $categories_query,
     'con' => $con,
     'lots_list' => $lots_list,
 ]);
