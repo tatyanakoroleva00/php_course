@@ -2,10 +2,10 @@
 require_once 'functions.php';
 require_once 'categories.php';
 require_once 'init.php';
-
+require_once 'vendor/autoload.php';
+session_start();
 
 if(isset($_GET['category'])) {
-    print_r($_GET);
     $category = $_GET['category']; #English
 
     $sql = "SELECT name FROM category WHERE name_eng = '$category';";
@@ -44,7 +44,7 @@ if(isset($_GET['category'])) {
 
     //6. Запрос для получения данных с учетом пагинации
 
-    $lots = "SELECT *
+    $lots = "SELECT *, lot.name AS lot_name, lot.id AS lot_id
     FROM lot
     JOIN category ON lot.category_id = category.id
     WHERE category.name = '$category_name'
@@ -64,13 +64,12 @@ if(isset($_GET['category'])) {
             'page' => $page,
             'totalPages' => $total_pages,
             'category' => $category,
+            'con' => $con,
         ]);
     }
     else {
         $page_content = '<h1>Нет товаров в данной категории</h1>';
     }
-
-
 } else {
     $page_content = '<h1>Категория не выбрана</h1>';
 }

@@ -1,5 +1,4 @@
 <?php
-error_reporting(E_ALL & ~E_STRICT);
 require_once 'functions.php';
 require_once 'lots_list.php';
 require_once 'searchUserByEmail.php';

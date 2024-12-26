@@ -19,7 +19,7 @@
                                         <span class="lot__cost"><?= $item['price'] ?><b class="rub">р</b></span>
                                     </div>
                                     <div class="lot__timer timer">
-                                        <?= $item['lot_date']?>
+                                        <?= formattedDate($item['lot_date'])?>
                                     </div>
                                 </div>
                             </div>
@@ -30,8 +30,11 @@
         <?php endif; ?>
         <p style="text-align: center">
         <?php
+
         for ($i = 1; $i <= $totalPages; $i++) {
+            if ($totalPages > 1)
             echo "<a href='?search=$searchQuery&page=$i'>$i</a> ";
+
         } ?>
         </p>
 

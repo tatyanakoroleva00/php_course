@@ -54,7 +54,7 @@ if (isset($_GET['id'])) {
             if ($lot_rate > $minimal_possible_rate || $lot_rate == $minimal_possible_rate) {
                 $query = "SELECT lot_rate, cur_price from lot WHERE id = '$lot_id'";
                 $result = mysqli_query($con, $query);
-                $cur_price = $lot_rate + $cur_price;
+                $cur_price = $lot_rate;
                 $user_id = $_SESSION['user']['id'];
 
                 if ($result && mysqli_num_rows($result) > 0 && ($lot_rate > $lot_step || $lot_rate == $lot_step)) {
@@ -72,26 +72,26 @@ if (isset($_GET['id'])) {
                     $query2 = "UPDATE lot SET lot_rate = '$json_data', cur_price = '$cur_price' WHERE id = '$lot_id'";
 
                     if (mysqli_query($con, $query2)) {
-                        echo "Ставки добавлены";
+//                        echo "Ставки добавлены";
                         //                    header("Location: " . $_SERVER['REQUEST_URI']);
                         //                    exit;
                     } else {
-                        echo "Ошибка обновления: " . mysqli_error($con);
+//                        echo "Ошибка обновления: " . mysqli_error($con);
                     }
 
                     # Добавление данных в таблицу rate
                     $query3 = "INSERT INTO rate (lot_id, price, user_id) VALUES ('$lot_id', '$lot_rate', '$user_id')";
 
                     if (mysqli_query($con, $query3)) {
-                        echo 'all is ok';
+//                        echo 'all is ok';
                         header("Location: " . $_SERVER['REQUEST_URI']);
                         exit;
                     } else {
-                        echo "Ошибка обновления: " . mysqli_error($con);
+//                        echo "Ошибка обновления: " . mysqli_error($con);
                     }
                 }
             } else {
-                $errors['rate'] = 'Ваша ставка должна представлять собой "текущую стоимость" + "ваша сумма" при учете минимальной ставки';
+                $errors['rate'] = 'Ваша ставка должна представлять собой "текущую стоимость" + "ваша сумма" при учете минимального шага';
             }
         }
 
@@ -124,7 +124,6 @@ if (isset($_GET['id'])) {
             $rates_number = 0;
         }
 
-
         $page_content = include_template('lot.php', [
             'chosen_lot' => $chosen_lot,
             'lot_name' => $lot_name,
@@ -152,7 +151,9 @@ if (isset($_GET['id'])) {
         $page_content = '<h1>Ошибка 404: Страница не найдена</h1>';
     }
 }
-
+else {
+    $page_content = '<h1>Вы не выбрали лот.</h1>';
+}
 $layout_content = include_template('layout.php', [
     'title' => 'Лот',
     'content' => $page_content,

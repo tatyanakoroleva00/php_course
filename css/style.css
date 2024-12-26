@@ -580,6 +580,7 @@ main.container {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  justify-content: flex-start;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
@@ -1087,6 +1088,9 @@ input:invalid .form__error{
   border-bottom: 1px solid #dbe6e9;
   font-size: 13px;
   font-weight: 400;
+}
+.history__item.winner{
+  background: #45abde;
 }
 
 .history__item td {

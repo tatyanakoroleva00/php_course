@@ -71,13 +71,16 @@ $add_lot_page = 'add.php';
     <nav class="nav">
         <ul class="nav__list container">
             <?php
-            $i = 0;
-            while ($i < count($categories)) : ?>
-                <li class="nav__item">
-                    <a href="pages/all-lots.html"><?php echo $categories[$i] ?></a>
+            if (isset($categories_query)) {
+            foreach($categories_query as $row => $elem) {
+                $name_eng = $elem['name_eng'];
+                ;?>
+
+                <li class="promo__item promo__item--boards">
+                    <a class="promo__link" href="category.php?category=<?=$name_eng?>"><?=$elem['name'];?> </a>
                 </li>
-                <?php $i++; ?>
-            <?php endwhile ?>
+            <?php }} ?>
+
 
             <!--заполните этот список из массива категорий-->
 

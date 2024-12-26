@@ -23,10 +23,16 @@ function include_template($name, array $data = [])
 function formattedDate($date) {
     date_default_timezone_set('Europe/Moscow');
     $cur_time = time();
-    $finish_date = strtotime('tomorrow midnight');
+    $finish_date = strtotime($date);
     $left_time_in_seconds = $finish_date - $cur_time;
+
+
     $hours = floor($left_time_in_seconds / 3600);
     $minutes = floor(($left_time_in_seconds % 3600) / 60);
+
+    if($left_time_in_seconds < 0) {
+        return("Время истекло");
+    }
     return("{$hours}ч : {$minutes}м");
 }
 

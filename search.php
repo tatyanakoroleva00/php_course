@@ -4,7 +4,7 @@ require_once 'functions.php';
 require_once 'init.php';
 require_once 'categories.php';
 require_once 'vendor/autoload.php';
-
+session_start();
 $searchQuery = '';
 
 if (isset($_GET['search'])) {
@@ -35,7 +35,8 @@ if (isset($_GET['search'])) {
         $total_sql = "
         SELECT COUNT(*)
         FROM lot
-        WHERE (name LIKE '%$searchQuery%' OR lot_message LIKE '%$searchQuery%');";
+        WHERE (name LIKE '%$searchQuery%' OR lot_message LIKE '%$searchQuery%')
+        AND lot_date > NOW() ;";
 
         $result = mysqli_query($con, $total_sql);
         $row = mysqli_fetch_array($result);
@@ -48,8 +49,9 @@ if (isset($_GET['search'])) {
 
         $sql = "SELECT *
             FROM lot
-            WHERE (name LIKE '%$searchQuery%' OR lot_message LIKE '%$searchQuery%')
-            ORDER BY lot_date DESC
+            WHERE lot_date > NOW()
+            AND (name LIKE '%$searchQuery%' OR lot_message LIKE '%$searchQuery%')
+            ORDER BY lot_date ASC
             LIMIT $offset, $records_per_page;";
 
         $result2 = mysqli_query($con, $sql);

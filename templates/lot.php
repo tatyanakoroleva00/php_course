@@ -33,24 +33,22 @@
                                 LIMIT 1;";
 
                                 $result = mysqli_query($con, $sql);
-                                    $row = mysqli_fetch_assoc($result); ?>
-                                        <div>
-                                            <p class="rates__title">Добавить ставку</p>
-                                            <p class="lot-item__form-item form__item form__item--invalid">
-                                            <label for="cost">Ваша cумма:</label>
-                                            <input id="cost" type="text" name="lot_rate" placeholder="0"
-                                                       value="<?php echo isset($_POST['lot_rate']) ? $_POST['lot_rate'] : ''; ?>">
-                                            </p>
-                                            <p style="color:red;"><?= $errors; ?></p>
-                                        </div>
+                                $row = mysqli_fetch_assoc($result); ?>
+                                <div>
+                                    <p class="rates__title">Добавить ставку</p>
+                                    <p class="lot-item__form-item form__item form__item--invalid">
+                                        <label for="cost">Ваша cумма:</label>
+                                        <input id="cost" type="text" name="lot_rate" placeholder="0"
+                                               value="<?php echo isset($_POST['lot_rate']) ? $_POST['lot_rate'] : ''; ?>">
+                                    </p>
+                                    <p style="color:red;"><?= $errors; ?></p>
+                                </div>
                                 <div>
                                     <button type="submit" class="button">Разместить ставку</button>
                                     <div class="lot-item__min-cost">
-                                        Мин. ставка <span><?= $lot_step; ?>р</span>
+                                        Мин. шаг <span><?= $lot_step; ?>р</span>
                                     </div>
                                 </div>
-
-
                             </form>
 
                         </div>
@@ -63,10 +61,13 @@
         <!--        Right column-->
         <div class="lot-col">
             <h3>Информация торгов</h3>
-            <h4><b><a href="/my_bets.php">Мои ставки тут</a></b></h4>
+            <?php if (isset($_SESSION['user'])) : ?>
+                <h4><b><a href="/my_bets.php">Мои ставки тут</a></b></h4>
+            <? endif; ?>
+
             <h4>Торги</h4>
             <div>
-                <span class="lot-item__timer timer"><?= $lot_date; ?></span>
+                <span class="lot-item__timer timer"><?= formattedDate($lot_date); ?></span>
                 <div class="lot-item__cost-state">
                     <div class="lot-item__rate">
                         <span class="lot-item__amount">Текущая цена</span>
@@ -76,30 +77,42 @@
             </div>
 
             <p>Общее количество ставок: <?= $rates_number; ?></p>
-            <h4>История торгов (<span>10</span>)</h4>
+            <h4>История торгов (<span>10</span>):</h4>
             <table class="history__list">
                 <?php
-                $query6 = "SELECT rate.rate_date, rate.lot_id, rate.price, users.name AS users_name
+                $query6 = "SELECT rate.rate_date, rate.lot_id, rate.price, users.name AS users_name, lot.name AS lot_name
                 FROM rate
                 INNER JOIN users ON rate.user_id = users.id
-                ORDER BY rate.rate_date DESC
-                LIMIT 10;";
+                JOIN lot ON rate.lot_id = lot.id
+                WHERE rate.lot_id = '$lot_id'
+                ORDER BY rate.rate_date DESC;";
+
 
                 $result = mysqli_query($con, $query6);
 
                 if (mysqli_num_rows($result) > 0) {
                     echo "<table class='history__list'>";
 
-                    while ($row = mysqli_fetch_assoc($result)) {
+                    foreach ($result as $index => $row) {
                         $dateLot = $row['rate_date'];
                         $dateLot2 = humanReadableTimeDifference($row['rate_date']);
 
-                        echo "<tr class='history__item'>
+                        if (strtotime($lot_date) < time() && ($index === 0)) {
+                            echo "<tr class='history__item winner'>
                     <td class='history__name'>" . $row['price'] . "</td>
-                    <td class='history__price'>" . $row['lot_id'] . "</td>
+                    <td class='history__price'>" . $row['lot_name'] . "</td>
+                    <td class='history__price'>" . $row['users_name'] . "</td>
+                    <td class='history__time'>" . "ПОБЕДИТЕЛЬ!" . "</td>
+                </tr>";
+                        } else {
+                            echo "<tr class='history__item'>
+                    <td class='history__name'>" . $row['price'] . "</td>
+                    <td class='history__price'>" . $row['lot_name'] . "</td>
                     <td class='history__price'>" . $row['users_name'] . "</td>
                     <td class='history__time'>" . $dateLot2 . "</td>
                 </tr>";
+                        }
+
                     }
                 }
                 ?>
