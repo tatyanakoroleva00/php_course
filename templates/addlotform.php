@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <label>Изображение <sup>*</sup></label>
         <div class="form__input-file">
             <input type="file" id="lot_img" name="image" required>
+            <span class="form__error"><?=$errors['image'] ?? ''?></span>
         </div>
     </div>
     <div class="form__container-three">

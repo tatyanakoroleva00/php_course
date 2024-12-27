@@ -1,7 +1,6 @@
 <div class="container">
     <section class="lots">
         <h2>История просмотров</h2>
-
         <?php if (isset($lots_list)) : ?>
             <ul class="lots__list">
                 <?php foreach ($lots_list as $index => $item) :?>
@@ -20,7 +19,7 @@
                                         <span class="lot__cost"><?= $item['price'] ?><b class="rub">р</b></span>
                                     </div>
                                     <div class="lot__timer timer">
-                                        <?= $item['lot_date']?>
+                                        <?= formattedDate($item['lot_date'])?>
                                     </div>
                                 </div>
                             </div>
@@ -28,6 +27,5 @@
                 <?php endforeach;?>
             </ul>
         <?php endif; ?>
-
     </section>
 

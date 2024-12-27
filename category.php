@@ -44,7 +44,7 @@ if(isset($_GET['category'])) {
 
     //6. Запрос для получения данных с учетом пагинации
 
-    $lots = "SELECT *, lot.name AS lot_name, lot.id AS lot_id
+    $lots = "SELECT *, lot.name AS lot_name, lot.id AS lot_id, lot.cur_price AS lot_cur_price
     FROM lot
     JOIN category ON lot.category_id = category.id
     WHERE category.name = '$category_name'

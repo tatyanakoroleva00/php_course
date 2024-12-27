@@ -1,3 +1,7 @@
+<?php
+print_r($errors['image']);
+?>
+
 <form class="form container form--invalid" action="../sign_up.php" method="post" autocomplete="off" enctype="multipart/form-data">
     <span class="form__error form__error--bottom"><?=  !empty($errors) ? 'Пожалуйста, исправьте ошибки в форме.' : ''?></span>
       <h2>Регистрация нового аккаунта</h2>
@@ -20,7 +24,7 @@
         <label>Аватар</label>
         <div class="form__input-file">
             <input type="file" id="avatar" name="avatar">
-            <span class="form__error"><?=$errors['avatar'] ?? ''?></span>
+            <span class="form__error"><?=$errors['image'] ?? ''?></span>
         </div>
     </div>
       <div class="form__item">

@@ -34,7 +34,6 @@
         for ($i = 1; $i <= $totalPages; $i++) {
             if ($totalPages > 1)
             echo "<a href='?search=$searchQuery&page=$i'>$i</a> ";
-
         } ?>
         </p>
 

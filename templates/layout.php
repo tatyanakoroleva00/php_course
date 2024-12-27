@@ -31,7 +31,7 @@ $add_lot_page = 'add.php';
                 <input type="search" name="search" placeholder="Поиск лота" value="<?php echo isset($_GET['search']) ? $_GET['search'] : '';?>">
                 <input class="main-header__search-btn" type="submit" name="find" value="Найти">
             </form>
-            <div><a class="main-header__add-lot button" href="<?=$add_lot_page;?>">Добавить лот</a></div>
+            <?php if (isset($_SESSION['user'])) : ?><div><a class="main-header__add-lot button" href="<?=$add_lot_page;?>">Добавить лот</a></div><? endif; ?>
             <nav class="user-menu">
 
                 <?php if (isset($_SESSION['user'])) : ?>
@@ -72,20 +72,15 @@ $add_lot_page = 'add.php';
         <ul class="nav__list container">
             <?php
             if (isset($categories_query)) {
-            foreach($categories_query as $row => $elem) {
-                $name_eng = $elem['name_eng'];
-                ;?>
-
-                <li class="promo__item promo__item--boards">
-                    <a class="promo__link" href="category.php?category=<?=$name_eng?>"><?=$elem['name'];?> </a>
-                </li>
-            <?php }} ?>
-
-
-            <!--заполните этот список из массива категорий-->
-
+                foreach($categories_query as $row => $elem) {
+                    $name_eng = $elem['name_eng'];
+                    ;?>
+            <li class="nav__item">
+                   <a class="promo__link" href="category.php?category=<?=$name_eng?>"><?=$elem['name'];?> </a></li>
+                <?php }} ?>
         </ul>
     </nav>
+
     <div class="main-footer__bottom container">
         <div class="main-footer__copyright">
             <p>© 2019, YetiCave</p>
@@ -129,7 +124,7 @@ $add_lot_page = 'add.php';
                 </svg>
             </a>
         </div>
-        <a class="main-footer__add-lot button" href="<?=$add_lot_page;?>">Добавить лот</a>
+        <?php if (isset($_SESSION['user'])) : ?><a class="main-footer__add-lot button" href="<?=$add_lot_page;?>">Добавить лот</a><? endif; ?>
         <div class="main-footer__developed-by">
             <span class="visually-hidden">Разработано:</span>
             <a class="logo-academy" href="https://htmlacademy.ru/intensive/php">

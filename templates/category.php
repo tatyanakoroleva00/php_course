@@ -9,13 +9,12 @@
                                      alt="<?= $item['lot_name'] ?>">
                             </div>
                             <div class="lot__info">
-<!--                                <span class="lot__category">--><?//= $item['name'] ?><!--</span>-->
                                 <h3 class="lot__title"><a class="text-link" href="show_lot.php?id=<?=$item['lot_id'];?>"> <?=$item['lot_name'] ?></a>
                                 </h3>
                                 <div class="lot__state">
                                     <div class="lot__rate">
-                                        <span class="lot__amount">Текущая цена</span>
-                                        <span class="lot__cost"><?= $item['сur_price'] ?><b class="rub">р</b></span>
+                                        <span class="lot__amount">Текущая цена:</span>
+                                        <span><b><?php echo $item['cur_price'];?></b></span><span>&nbsp;Р</span>
                                     </div>
                                     <div class="lot__timer timer">
                                         <?= formattedDate($item['lot_date'])?>
