@@ -20,8 +20,26 @@
     </div>
     <hr/>
     <div>
-        <button class="sort-button <?= $order?>" onclick="window.location.href='?order=<?= $nextOrder ?>'">Сортировать </button>
+        <button class="sort-button <?= $order ?>" onclick="window.location.href='?order=<?= $nextOrder ?>'">
+            Окончание аукциона - <?php echo $order === 'desc' ? "с начала": "с конца"?>
+            <span class="<?= $order ?>"></span>
+        </button>
+        <button class="sort-button <?= $publicationOrder ?>" onclick="window.location.href='?publicationOrder=<?= $nextPublicationOrder ?>'">
+            Дата публикации - <?php echo $publicationOrder === 'desc' ? "по возрастанию" : "по убыванию" ?>
+            <span class="<?= $publicationOrder ?>"></span>
+        </button>
     </div>
+    <h1>Фильтр лотов по цене</h1>
+    <form action="index.php" method="get">
+        <label for="min_price">Минимальная цена:</label>
+        <input type="number" id="min_price" name="min_price" step="0.01" min="0" required>
+
+        <label for="max_price">Максимальная цена:</label>
+        <input type="number" id="max_price" name="max_price" step="0.01" min="0" required>
+
+        <input type="submit" value="Фильтровать"/>
+    </form>
+    <button onclick="window.location.href='index.php'">Сбросить</button>
 </section>
 <section class="lots">
     <div class="lots__header">

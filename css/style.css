@@ -1248,9 +1248,9 @@ input:invalid .form__error{
   display: inline-block;
   margin-left: 5px;
 }
-.asc::after {
+.sort-button.desc::after {
   content: '↓';
 }
-.asc::before {
+.sort-button.asc::before {
   content: '↑';
 }

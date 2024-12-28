@@ -10,16 +10,40 @@ $i = 0;
 $query2 = "SELECT * FROM category";
 $categories_query = mysqli_query($con, $query2);
 
+$order = isset($_GET['order']) && $_GET['order'] === 'asc' ? 'asc' : 'desc';
+$nextOrder = $order === 'asc' ? 'desc' : 'asc';
 
+$publicationOrder = isset($_GET['publicationOrder']) && $_GET['publicationOrder'] === 'asc' ? 'asc' : 'desc';
+$nextPublicationOrder = $publicationOrder === 'desc' ? 'asc' : 'desc';
 
+$min_price = isset($_GET['min_price']) ? (float)$_GET['min_price'] : 0;
+$max_price = isset($_GET['max_price']) ? (float)$_GET['max_price'] : $min_price;
 
 //-------------ВЫВОД ОСНОВНЫХ ЛОТОВ
-// Определяем тип лотов для отображения
-$showLots = isset($_GET['show']) && $_GET['show'] === 'old';
 
-$type_of_lots_to_show = $_GET['show'];
+# Количество страниц - Открытые и Закрытые лоты
+if($_GET['show'] === 'new' || isset($order) || isset($publicationOrder) || isset($min_price) && isset($max_price)) {
+    $totalSql= "SELECT COUNT(*)
+        FROM lot
+        JOIN category ON lot.category_id = category.id
+        WHERE lot_date > NOW();";
+} else  if ($_GET['show'] === 'old') {
+    # Количество страниц
+    $totalSql= "SELECT COUNT(*)
+        FROM lot
+        JOIN category ON lot.category_id = category.id
+        WHERE lot_date < NOW();";
+} else {
+    // Обработка случая, если 'show' имеет некорректное значение
+    die('Invalid show parameter');
+}
 
-//ПАГИНАЦИЯ
+$result= mysqli_query($con, $totalSql);
+if(!$result) {
+    die('Ошибка выполнения запроса: ' . mysqli_error($con));
+}
+
+/////////////////////////ПАГИНАЦИЯ
 
 //1. Установка количества записей на странице
 $records_per_page = 12;
@@ -30,33 +54,15 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 //3. Определение смещения для SQL-запроса
 $offset = ($page - 1) * $records_per_page;
 
-# Количество страниц
-if(!$showLots) {
-    $totalSql= "SELECT COUNT(*)
-        FROM lot
-        JOIN category ON lot.category_id = category.id
-        WHERE lot_date > NOW();";
-} else {
-    # Количество страниц
-    $totalSql= "SELECT COUNT(*)
-        FROM lot
-        JOIN category ON lot.category_id = category.id
-        WHERE lot_date < NOW();";
-}
-$result= mysqli_query($con, $totalSql);
-if(!$result) {
-    die('Ошибка выполнения запроса: ' . mysqli_error($con));
-}
 //Извлечение результата - количество записей
 $row = mysqli_fetch_array($result);
 $total_records = $row[0];
 
 //5. Вычисление общего количества страниц
 $total_pages = ceil($total_records / $records_per_page);
-
 //6. Запрос для получения данных с учетом пагинации
 
-if(!$showLots) {
+if($_GET['show'] === 'new' || $_GET['order'] === 'asc') {
 # Сортировка лотов, начиная с тех, чей срок уже почти истек, до тех, у кого поздний срок.
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
         FROM `lot`
@@ -64,7 +70,7 @@ if(!$showLots) {
         WHERE `lot_date` > NOW()
         ORDER BY lot_date ASC
         LIMIT $offset, $records_per_page";
-} else {
+} else if($_GET['show'] === 'old') {
     # Закрытые лоты
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
         FROM `lot`
@@ -72,7 +78,45 @@ if(!$showLots) {
         WHERE `lot_date` < NOW()
         ORDER BY lot_date ASC
         LIMIT $offset, $records_per_page";
+} else if($_GET['order'] === 'desc') {
+    $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
+        FROM `lot`
+        JOIN category ON lot.category_id = category.id
+        WHERE `lot_date` > NOW()
+        ORDER BY lot_date DESC
+        LIMIT $offset, $records_per_page";
+} else if($_GET['publicationOrder'] === 'asc') {
+    $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
+        FROM `lot`
+        JOIN category ON lot.category_id = category.id
+        WHERE `lot_date` > NOW()
+        ORDER BY created_at ASC
+        LIMIT $offset, $records_per_page";
+} else if($_GET['publicationOrder'] === 'desc') {
+    $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
+        FROM `lot`
+        JOIN category ON lot.category_id = category.id
+        WHERE `lot_date` > NOW()
+        ORDER BY created_at DESC
+        LIMIT $offset, $records_per_page";
 }
+else if(isset($_GET['min_price']) && isset($_GET['max_price'])) {
+    $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
+        FROM `lot`
+        JOIN category ON lot.category_id = category.id
+        WHERE `lot_date` > NOW()
+        AND cur_price BETWEEN '$min_price' AND '$max_price'
+        LIMIT $offset, $records_per_page";
+}
+else {
+    $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
+        FROM `lot`
+        JOIN category ON lot.category_id = category.id
+        WHERE `lot_date` > NOW()
+        ORDER BY lot_date ASC
+        LIMIT $offset, $records_per_page";
+}
+
 $lots_list = mysqli_query($con, $query);
 if(!$lots_list) {
     die('Ошибка выполнения запроса: ' . mysqli_error($con));
@@ -89,8 +133,12 @@ if ($result2 && mysqli_num_rows($result2) > 0) {
         'page' => $page,
         'lots_list' => $lots_list,
         'totalPages' => $total_pages,
-        'type_of_lots_to_show' => $type_of_lots_to_show,
+        'type_of_lots_to_show' => $_GET['show'],
         'search_array' => $search_array,
+        'nextOrder' => $nextOrder,
+        'order' => $order,
+        'publicationOrder' => $publicationOrder,
+        'nextPublicationOrder' => $nextPublicationOrder,
     ]);
 
 } else {
