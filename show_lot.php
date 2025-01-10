@@ -161,6 +161,3 @@ $layout_content = include_template('layout.php', [
 ]);
 
 print_r($layout_content);
-
-
-

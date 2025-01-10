@@ -32,8 +32,8 @@
                                 ORDER BY rate_date DESC
                                 LIMIT 1;";
 
-                                $result = mysqli_query($con, $sql);
-                                $row = mysqli_fetch_assoc($result); ?>
+                                $result4 = mysqli_query($con, $sql);
+                                $row = mysqli_fetch_assoc($result4); ?>
                                 <div>
                                     <p class="rates__title">Добавить ставку</p>
                                     <p class="lot-item__form-item form__item form__item--invalid">

@@ -8,14 +8,11 @@ session_start();
 if(isset($_GET['category'])) {
     $category = $_GET['category']; #English
 
-//    $sql = "SELECT name FROM category WHERE name_eng = '$category';";
     $sql = "SELECT name FROM category WHERE name_eng = ?;";
     $stmt = $con->prepare($sql);
     $stmt ->bind_param('s', $category);
     $stmt->execute();
     $query = $stmt->get_result();
-
-//    $query = mysqli_query($con, $sql);
 
     if (mysqli_num_rows($query) > 0) {
         $category_name = mysqli_fetch_assoc($query);
@@ -39,9 +36,13 @@ if(isset($_GET['category'])) {
         SELECT COUNT(*)
         FROM lot
         JOIN category ON lot.category_id = category.id
-        WHERE category.name = '$category_name'";
+        WHERE category.name = ?";
 
-    $result = mysqli_query($con, $total_sql);
+    $stmt2 = $con->prepare($total_sql);
+    $stmt2->bind_param('s', $category_name);
+    $stmt2->execute();
+    $result = $stmt2->get_result();
+
     $row = mysqli_fetch_array($result);
     $total_records = $row[0];
 
@@ -53,11 +54,14 @@ if(isset($_GET['category'])) {
     $lots = "SELECT *, lot.name AS lot_name, lot.id AS lot_id, lot.cur_price AS lot_cur_price
     FROM lot
     JOIN category ON lot.category_id = category.id
-    WHERE category.name = '$category_name'
+    WHERE category.name = ?
     ORDER BY lot.created_at DESC
-    LIMIT $offset, $records_per_page;";
+    LIMIT ?, ?;";
 
-    $query2 = mysqli_query($con, $lots);
+    $stmt3 = $con->prepare($lots);
+    $stmt3 -> bind_param('sii', $category_name, $offset, $records_per_page);
+    $stmt3->execute();
+    $query2 = $stmt3->get_result();
 
     if ($query2 && mysqli_num_rows($query2) > 0) {
 

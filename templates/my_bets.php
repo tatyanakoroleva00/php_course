@@ -39,10 +39,14 @@
             $sql = "
             SELECT *, rate.user_id
             FROM rate
-            WHERE rate.lot_id = '$lot_id'
+            WHERE rate.lot_id = ?
             ORDER BY rate_date DESC;";
 
-            $result2 = mysqli_query($con, $sql);
+            $stmt2 = $con->prepare($sql);
+            $stmt2->bind_param('i', $lot_id);
+            $stmt2->execute();
+            $result2 = $stmt2->get_result();
+
             $last_user_id = mysqli_fetch_assoc($result2);
             $last_rate_date = strtotime($last_user_id['rate_date']);
 

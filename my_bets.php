@@ -15,16 +15,22 @@ if(isset($_SESSION)) {
     JOIN (
         SELECT lot_id, MAX(rate_date) AS max_rate_date
         FROM rate
-        WHERE user_id = '$user_id'
+        WHERE user_id = ?
         GROUP BY lot_id
     ) t2 ON t1.lot_id = t2.lot_id AND t1.rate_date = t2.max_rate_date
     JOIN lot ON t1.lot_id = lot.id
     JOIN category ON  lot.category_id = category.id
-    WHERE t1.user_id = '$user_id'
+    WHERE t1.user_id = ?
     ORDER BY lot.lot_date DESC
 ;";
 
-    $result = mysqli_query($con, $sql);
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param('ii', $user_id, $user_id);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
+//    $result = mysqli_query($con, $sql);
 
     $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
