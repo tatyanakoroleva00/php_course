@@ -8,31 +8,27 @@ session_start();
 if (isset($_GET['id'])) {
     $lot_id = $_GET['id'];
 
-    #1 --ДОБАВЛЕНИЕ ЛОТОВ В FAVOURITES ДЛЯ ПОКАЗА НА СТРАНИЦЕ HISTORY.PHP.
+#1 --ДОБАВЛЕНИЕ ЛОТОВ В FAVOURITES ДЛЯ ПОКАЗА НА СТРАНИЦЕ HISTORY.PHP.
 
-    #Проверяем, существует ли массив избранных лотов в сессии
+#Проверяем, существует ли массив избранных лотов в сессии
     if (!isset($_SESSION['favourite_lots'])) {
         $_SESSION['favourite_lots'] = [];
     }
 
-    #Добавляем текущий лот в массив избранных, если его там еще нет
+#Добавляем текущий лот в массив избранных, если его там еще нет
     if (!in_array($lot_id, $_SESSION['favourite_lots'])) {
         $_SESSION['favourite_lots'][] = $lot_id;
     }
 
-    #2 -- ВЫВОД ЛОТА НА СТРАНИЦЕ
+#2 -- ВЫВОД ЛОТА НА СТРАНИЦЕ
 
-    #Делаем запрос в БД, ищем лот по id. Соединяем две таблицы вместе по id.
+#Делаем запрос в БД, ищем лот по id. Соединяем две таблицы вместе по id.
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
-        FROM `lot`
-        JOIN category ON lot.category_id = category.id
-        WHERE lot.id = ?";
+       FROM `lot`
+       JOIN category ON lot.category_id = category.id
+       WHERE lot.id = '$lot_id'";
 
-    $stmt = $con->prepare($query);
-    $stmt->bind_param('i', $lot_id);
-    $stmt->execute();
-
-    $chosen_lot = $stmt->get_result();
+    $chosen_lot = mysqli_query($con, $query);
 
     if ($chosen_lot && mysqli_num_rows($chosen_lot) > 0) {
         foreach ($chosen_lot as $row => $elem) {
@@ -47,7 +43,7 @@ if (isset($_GET['id'])) {
             $category_name = $elem['category_name'];
         }
 
-        # Делаем запрос по айди лота к БД, находим лот, его стоимость и мин.ставку. Меняем цену на лот
+# Делаем запрос по айди лота к БД, находим лот, его стоимость и мин.ставку. Меняем цену на лот
         if (isset($_POST['lot_rate'])) {
 
             $lot_rate = $_POST['lot_rate'];
@@ -56,12 +52,8 @@ if (isset($_GET['id'])) {
 
             $minimal_possible_rate = $cur_price + $lot_step;
             if ($lot_rate > $minimal_possible_rate || $lot_rate == $minimal_possible_rate) {
-                $query1 = "SELECT lot_rate, cur_price from lot WHERE id = ?";
-                $stmt1 = $con->prepare($query1);
-                $stmt1->bind_param('i', $lot_id);
-                $stmt1->execute();
-                $result = $stmt1->get_result();
-
+                $query = "SELECT lot_rate, cur_price from lot WHERE id = '$lot_id'";
+                $result = mysqli_query($con, $query);
                 $cur_price = $lot_rate;
                 $user_id = $_SESSION['user']['id'];
 
@@ -69,33 +61,25 @@ if (isset($_GET['id'])) {
                     $row = mysqli_fetch_assoc($result);
                     $data = json_decode($row['lot_rate'], true);
 
-                    # Добавление нового значения
+# Добавление нового значения
                     if (!is_array($data)) {
                         $data = [];
                     }
                     $data[] = $lot_rate;
 
-                    # Обновление данных по лоту в БД
+# Обновление данных по лоту в БД
                     $json_data = mysqli_real_escape_string($con, json_encode($data));
                     $query2 = "UPDATE lot SET lot_rate = '$json_data', cur_price = '$cur_price' WHERE id = '$lot_id'";
 
-                    $stmt2 = $con->prepare($query2);
-                    $stmt2->bind_param('sii', $json_data, $cur_price, $lot_id);
-                    $stmt2->execute();
-
-                    $result2 = $stmt2->get_result();
-
-//                    if (mysqli_query($con, $query2)) {
-                    if($result2) {
+                    if (mysqli_query($con, $query2)) {
 //                        echo "Ставки добавлены";
-
-                        //                    header("Location: " . $_SERVER['REQUEST_URI']);
-                        //                    exit;
+//                    header("Location: " . $_SERVER['REQUEST_URI']);
+//                    exit;
                     } else {
 //                        echo "Ошибка обновления: " . mysqli_error($con);
                     }
 
-                    # Добавление данных в таблицу rate
+# Добавление данных в таблицу rate
                     $query3 = "INSERT INTO rate (lot_id, price, user_id) VALUES ('$lot_id', '$lot_rate', '$user_id')";
 
                     if (mysqli_query($con, $query3)) {
@@ -111,25 +95,25 @@ if (isset($_GET['id'])) {
             }
         }
 
-        # Ищем контактные данные разместившего лот
+# Ищем контактные данные разместившего лот
         if (isset($_GET)) {
             $current_id = $_GET['id'];
 //            echo $current_id;
 
             $query_search_user = "SELECT lot.id, user_id, users.id, users.name, users.contacts
-            FROM lot
-            JOIN users ON lot.user_id = users.id
-            WHERE lot.id = '$current_id' ";
+           FROM lot
+           JOIN users ON lot.user_id = users.id
+           WHERE lot.id = '$current_id' ";
 
             $result = mysqli_query($con, $query_search_user);
             $row = mysqli_fetch_assoc($result);
 
         }
 
-        # Количество ставок, сделанных по лоту
+# Количество ставок, сделанных по лоту
         $sql_count_rates = "SELECT COUNT(*) as count
-                    FROM rate
-                    WHERE lot_id = '$lot_id';";
+                   FROM rate
+                   WHERE lot_id = '$lot_id';";
 
         $count_rates = mysqli_query($con, $sql_count_rates);
 
@@ -177,3 +161,5 @@ $layout_content = include_template('layout.php', [
 ]);
 
 print_r($layout_content);
+
+
