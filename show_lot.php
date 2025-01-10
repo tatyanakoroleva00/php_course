@@ -26,9 +26,13 @@ if (isset($_GET['id'])) {
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
         FROM `lot`
         JOIN category ON lot.category_id = category.id
-        WHERE lot.id = '$lot_id'";
+        WHERE lot.id = ?";
 
-    $chosen_lot = mysqli_query($con, $query);
+    $stmt = $con->prepare($query);
+    $stmt->bind_param('i', $lot_id);
+    $stmt->execute();
+
+    $chosen_lot = $stmt->get_result();
 
     if ($chosen_lot && mysqli_num_rows($chosen_lot) > 0) {
         foreach ($chosen_lot as $row => $elem) {
@@ -52,8 +56,12 @@ if (isset($_GET['id'])) {
 
             $minimal_possible_rate = $cur_price + $lot_step;
             if ($lot_rate > $minimal_possible_rate || $lot_rate == $minimal_possible_rate) {
-                $query = "SELECT lot_rate, cur_price from lot WHERE id = '$lot_id'";
-                $result = mysqli_query($con, $query);
+                $query1 = "SELECT lot_rate, cur_price from lot WHERE id = ?";
+                $stmt1 = $con->prepare($query1);
+                $stmt1->bind_param('i', $lot_id);
+                $stmt1->execute();
+                $result = $stmt1->get_result();
+
                 $cur_price = $lot_rate;
                 $user_id = $_SESSION['user']['id'];
 
@@ -71,8 +79,16 @@ if (isset($_GET['id'])) {
                     $json_data = mysqli_real_escape_string($con, json_encode($data));
                     $query2 = "UPDATE lot SET lot_rate = '$json_data', cur_price = '$cur_price' WHERE id = '$lot_id'";
 
-                    if (mysqli_query($con, $query2)) {
+                    $stmt2 = $con->prepare($query2);
+                    $stmt2->bind_param('sii', $json_data, $cur_price, $lot_id);
+                    $stmt2->execute();
+
+                    $result2 = $stmt2->get_result();
+
+//                    if (mysqli_query($con, $query2)) {
+                    if($result2) {
 //                        echo "Ставки добавлены";
+
                         //                    header("Location: " . $_SERVER['REQUEST_URI']);
                         //                    exit;
                     } else {
