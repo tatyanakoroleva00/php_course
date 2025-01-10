@@ -117,7 +117,6 @@ else {
         ORDER BY lot_date ASC
         LIMIT ?, ?";
 }
-//LIMIT $offset, $records_per_page";
 
 // Создание подготовленного выражения
 $stmt  = $con->prepare($query);
@@ -130,13 +129,11 @@ $stmt->execute();
 
 $lots_list = $stmt->get_result();
 
-//$lots_list = mysqli_query($con, $query);
 if(!$lots_list) {
     die('Ошибка выполнения запроса: ' . mysqli_error($con));
 }
 
-//$result2 = mysqli_query($con, $query);
-$result2 = $stmt->get_result();
+$result2 = $lots_list;
 
 if ($result2 && mysqli_num_rows($result2) > 0) {
 

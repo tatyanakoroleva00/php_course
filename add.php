@@ -1,8 +1,7 @@
 <?php
-
+require_once 'init.php';
 require_once 'functions.php';
 require_once 'categories.php';
-require_once 'init.php';
 require_once 'vendor/autoload.php';
 $title = 'Добавить лот';
 $errors = [];
@@ -103,7 +102,6 @@ else {
             echo "Файл не был загружен.";
         }
 
-
         # Ошибки в форме.
         if (count($errors)) {
             $page_content = include_template('addlotform.php', [
@@ -112,11 +110,9 @@ else {
             ]);
             var_dump($errors);
         } else {
-            //При изначальном добавлении лота $cur_price = $price у меня
+            // При изначальном добавлении лота $cur_price = $price у меня
             $formatted_cur_price = formattedPrice($_POST['cur_price']); //Отформатированная цена для публикации на странице
             $formatted_price = formattedPrice($_POST['cur_price']); //Отформатированная цена для публикации на странице
-//            $formatted_date = formattedDate($_POST['lot_date']); //Отформатированная дата для публикации на странице
-
 
             $name = $_POST['lot_name'];
             $lot_message = $_POST['lot_message'];
@@ -126,17 +122,25 @@ else {
             $cur_price = $_POST['cur_price'];
             $price = $_POST['cur_price'];
 
-            //Преобразование даты из формата 11.11.2024 в формат 2024-11-11 для БД
+            // Преобразование даты из формата 11.11.2024 в формат 2024-11-11 для БД
             $originalDate = $_POST['lot_date'];
 
             $lot_date = $_POST['lot_date'];
 
-            //Поиск айди пользователя
+            // Поиск айди пользователя
             $user_id = $_SESSION['user']['id'];
 
-            //Поиск по категории номера из таблицы "category", чтобы подставить в новый lot в БД.
-            $query1 = "SELECT id FROM category WHERE LOWER(category.name) = LOWER('$category')";
-            $result1 = mysqli_query($con, $query1);
+            // Поиск по категории номера из таблицы "category", чтобы подставить в новый lot в БД.
+            //$query1 = "SELECT id FROM category WHERE LOWER(category.name) = LOWER('$category')";
+
+            $query1 = "SELECT id FROM category WHERE LOWER(category.name) = LOWER(?)";
+
+            $stmt  = $con->prepare($query1);
+            $stmt-> bind_param('s', $category);
+            $stmt->execute();
+            $result1 = $stmt->get_result();
+
+            // $result1 = mysqli_query($con, $query1);
 
             if ($result1 && mysqli_num_rows($result1) > 0) {
                 $row = mysqli_fetch_assoc($result1);
@@ -144,7 +148,7 @@ else {
 
                 $query2 = "INSERT into `lot` SET `name` = '$name', `lot_message` = '$lot_message', `img_url` = '$img_url',
                 `lot_step` = '$lot_step', `category_id` = '$category_id', `price` = '$price', `lot_date` = '$lot_date', `lot_rate` = 0, `cur_price` = '$price',
-                `user_id` = '$user_id', `notified` = 0";
+                `user_id` = '$user_id', `notified` =  NULL";
 
                 // SQL-запрос для получения последнего добавленного товара
                 $sql = "SELECT id FROM lot ORDER BY id DESC LIMIT 1"; // Предполагается, что таблица называется 'products' и у нее есть поле 'id'

@@ -8,8 +8,14 @@ session_start();
 if(isset($_GET['category'])) {
     $category = $_GET['category']; #English
 
-    $sql = "SELECT name FROM category WHERE name_eng = '$category';";
-    $query = mysqli_query($con, $sql);
+//    $sql = "SELECT name FROM category WHERE name_eng = '$category';";
+    $sql = "SELECT name FROM category WHERE name_eng = ?;";
+    $stmt = $con->prepare($sql);
+    $stmt ->bind_param('s', $category);
+    $stmt->execute();
+    $query = $stmt->get_result();
+
+//    $query = mysqli_query($con, $sql);
 
     if (mysqli_num_rows($query) > 0) {
         $category_name = mysqli_fetch_assoc($query);
