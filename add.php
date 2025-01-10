@@ -144,7 +144,7 @@ else {
 
                 $query2 = "INSERT into `lot` SET `name` = '$name', `lot_message` = '$lot_message', `img_url` = '$img_url',
                 `lot_step` = '$lot_step', `category_id` = '$category_id', `price` = '$price', `lot_date` = '$lot_date', `lot_rate` = 0, `cur_price` = '$price',
-                `user_id` = '$user_id'";
+                `user_id` = '$user_id', `notified` = 0";
 
                 // SQL-запрос для получения последнего добавленного товара
                 $sql = "SELECT id FROM lot ORDER BY id DESC LIMIT 1"; // Предполагается, что таблица называется 'products' и у нее есть поле 'id'

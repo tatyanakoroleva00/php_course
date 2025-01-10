@@ -1,6 +1,7 @@
 <?php
 require_once 'init.php';
 require_once 'functions.php';
+require_once 'email.php';
 session_start();
 $title = 'Главная страница';
 
@@ -69,7 +70,7 @@ if($_GET['show'] === 'new' || $_GET['order'] === 'asc') {
         JOIN category ON lot.category_id = category.id
         WHERE `lot_date` > NOW()
         ORDER BY lot_date ASC
-        LIMIT $offset, $records_per_page";
+        LIMIT ?, ?";
 } else if($_GET['show'] === 'old') {
     # Закрытые лоты
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
@@ -77,28 +78,28 @@ if($_GET['show'] === 'new' || $_GET['order'] === 'asc') {
         JOIN category ON lot.category_id = category.id
         WHERE `lot_date` < NOW()
         ORDER BY lot_date ASC
-        LIMIT $offset, $records_per_page";
+        LIMIT ?, ?";
 } else if($_GET['order'] === 'desc') {
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
         FROM `lot`
         JOIN category ON lot.category_id = category.id
         WHERE `lot_date` > NOW()
         ORDER BY lot_date DESC
-        LIMIT $offset, $records_per_page";
+        LIMIT ?, ?";
 } else if($_GET['publicationOrder'] === 'asc') {
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
         FROM `lot`
         JOIN category ON lot.category_id = category.id
         WHERE `lot_date` > NOW()
         ORDER BY created_at ASC
-        LIMIT $offset, $records_per_page";
+        LIMIT ?, ?";
 } else if($_GET['publicationOrder'] === 'desc') {
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
         FROM `lot`
         JOIN category ON lot.category_id = category.id
         WHERE `lot_date` > NOW()
         ORDER BY created_at DESC
-        LIMIT $offset, $records_per_page";
+        LIMIT ?, ?";
 }
 else if(isset($_GET['min_price']) && isset($_GET['max_price'])) {
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
@@ -106,7 +107,7 @@ else if(isset($_GET['min_price']) && isset($_GET['max_price'])) {
         JOIN category ON lot.category_id = category.id
         WHERE `lot_date` > NOW()
         AND cur_price BETWEEN '$min_price' AND '$max_price'
-        LIMIT $offset, $records_per_page";
+        LIMIT ?, ?";
 }
 else {
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
@@ -114,15 +115,28 @@ else {
         JOIN category ON lot.category_id = category.id
         WHERE `lot_date` > NOW()
         ORDER BY lot_date ASC
-        LIMIT $offset, $records_per_page";
+        LIMIT ?, ?";
 }
+//LIMIT $offset, $records_per_page";
 
-$lots_list = mysqli_query($con, $query);
+// Создание подготовленного выражения
+$stmt  = $con->prepare($query);
+
+// Связывание переменных с параметрами запроса
+$stmt -> bind_param('ii', $offset, $records_per_page);
+
+// Выполнение запроса
+$stmt->execute();
+
+$lots_list = $stmt->get_result();
+
+//$lots_list = mysqli_query($con, $query);
 if(!$lots_list) {
     die('Ошибка выполнения запроса: ' . mysqli_error($con));
 }
 
-$result2 = mysqli_query($con, $query);
+//$result2 = mysqli_query($con, $query);
+$result2 = $stmt->get_result();
 
 if ($result2 && mysqli_num_rows($result2) > 0) {
 
