@@ -4,7 +4,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 <form class="form form--add-lot container <?php echo !empty($errors) ? 'form--invalid' : '' ?>" action="../add.php"
-      method="post" enctype="multipart/form-data"> <!-- form--invalid -->
+      method="post" enctype="multipart/form-data">
     <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
     <h2>Добавление лота</h2>
     <div class="form__container-two">
@@ -42,14 +42,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     <div class="form__item form__item--wide <?php echo isset($errors['lot_message']) ? 'form__item--invalid' : ''; ?>">
         <label for="message">Описание <sup>*</sup></label>
-        <textarea id="message" name="lot_message"
-                  placeholder="Напишите описание лота"><?php echo htmlspecialchars($textareaContent); ?></textarea>
+        <textarea id="message" name="lot_message" placeholder="Напишите описание лота"> <?php echo htmlspecialchars($textareaContent); ?></textarea>
         <span class="form__error"><?php echo isset($errors['lot_message']) ? 'Напишите описание лота' : '' ?></span>
     </div>
     <div>
         <label>Изображение <sup>*</sup></label>
         <div class="form__input-file">
-            <input type="file" id="lot_img" name="image" required>
+            <?php if(isset($_SESSION['uploaded_file'])) : ?>
+                <img src="<?php echo $_SESSION['uploaded_file'];?>" alt="Загруженное изображение" width="100px ">
+                <button class="remove-button" onClick="removeFile() ">УДАЛИТЬ</button>
+            <?php else: ?>
+                <input type="file" id="lot_img" name="image" required>
+            <?php endif;?>
             <span class="form__error"><?=$errors['image'] ?? ''?></span>
         </div>
     </div>

@@ -17,22 +17,28 @@
                     <span><?= $user_name . ', ' . $contacts ?? '' ?></span></p>
 
             </div>
-            <?php if (isset($_SESSION['user'])) : ?>
+            <?php if (isset($_SESSION['user']) && (strtotime($lot_date) > strtotime(date('Y-m-d')))) : ?>
 
                 <?php
                 # Если не текущий пользователь создал лот и дата истечения срока лота больше текущей
-                if (($user_id !== $_SESSION['user']['id']) && (strtotime($lot_date) > strtotime(date('Y-m-d')))): ?>
+                if ($user_id != $_SESSION['user']['id']) :?>
                     <div>
                         <div class="lot-item__state">
                             <form class="lot-item__form" action='show_lot.php?id=<?= $lot_id; ?>' method="post">
                                 <?php
-                                $sql = "SELECT *
+                                $sql4 = "SELECT *
                                 FROM rate
-                                WHERE rate.lot_id = '$lot_id'
+                                WHERE rate.lot_id = ?
                                 ORDER BY rate_date DESC
                                 LIMIT 1;";
 
-                                $result4 = mysqli_query($con, $sql);
+                                $stmt4 = $con->prepare($sql4);
+                                $stmt4->bind_param('i', $lot_id);
+                                $stmt4->execute();
+
+                                $result4 = $stmt4->get_result();
+
+//                                $result4 = mysqli_query($con, $sql);
                                 $row = mysqli_fetch_assoc($result4); ?>
                                 <div>
                                     <p class="rates__title">Добавить ставку</p>
@@ -84,16 +90,19 @@
                 FROM rate
                 INNER JOIN users ON rate.user_id = users.id
                 JOIN lot ON rate.lot_id = lot.id
-                WHERE rate.lot_id = '$lot_id'
+                WHERE rate.lot_id = ?
                 ORDER BY rate.rate_date DESC;";
 
+                $stmt6 = $con->prepare($query6);
+                $stmt6->bind_param('i', $lot_id);
+                $stmt6->execute();
 
-                $result = mysqli_query($con, $query6);
+                $result6 = $stmt6->get_result();
 
-                if (mysqli_num_rows($result) > 0) {
+                if (mysqli_num_rows($result6) > 0) {
                     echo "<table class='history__list'>";
 
-                    foreach ($result as $index => $row) {
+                    foreach ($result6 as $index => $row) {
                         $dateLot = $row['rate_date'];
                         $dateLot2 = humanReadableTimeDifference($row['rate_date']);
 

@@ -1,12 +1,13 @@
 <?php
+session_start();
+
 require_once 'init.php';
 require_once 'functions.php';
 require_once 'categories.php';
 require_once 'vendor/autoload.php';
+require_once 'remove_file.php';
 $title = 'Добавить лот';
 $errors = [];
-
-session_start();
 
 /*1*/
 # ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ АВТОРИЗОВАН, запретить доступ к странице с добавление лота
@@ -76,30 +77,28 @@ else {
             // Получение MIME-типа файла
             $fileMimeType = mime_content_type($_FILES['image']['tmp_name']);
             //Проверка формата загруженного файла
-            $allowedMimeTypes = [
-                'image/jpeg',
-                'image/png',
-            ];
+            $allowedMimeTypes = ['image/jpeg','image/png',];
 
-            // Проверка, является ли MIME-тип допустимым
-            if (in_array($fileMimeType, $allowedMimeTypes)) {
-//                echo "Файл является допустимым изображением.";
+
+            if(in_array($fileMimeType, $allowedMimeTypes)) {
+                $file_name = uniqid() . '-' . $_FILES['image']['name'];
+                $file_path = __DIR__ . '/img/lots/';
+                $relative_file_url = '/img/lots/' . $file_name;
+                $uploadFile = $file_path . $file_name;
+
+                if(move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+                    $_SESSION['uploaded_file'] = $relative_file_url;
+                    $_POST['img_url'] = $relative_file_url;
+                } else {
+                    $errors['image'] = 'Ошибка загрузки файла.';
+                }
             } else {
-//                echo "Файл не является допустимым изображением.";
                 $errors['image'] = 'Файл не является допустимым изображением.';
             }
-
-            $file_name = $_FILES['image']['name'];
-            $file_path = __DIR__ . '/img/lots/';
-            $file_url = '/img/lots/' . $file_name;
-            $tmp_name = $_FILES['image']['tmp_name'];
-
-            if (!count($errors)) {
-                move_uploaded_file($tmp_name, $file_path . $file_name);
-                $_POST['img_url'] = "$file_url";
-            }
         } else {
-            echo "Файл не был загружен.";
+            if(!isset($_SESSION['uploaded_file'])) {
+                $errors['image'] = "Файл не был загружен.";
+            }
         }
 
         # Ошибки в форме.
@@ -108,7 +107,7 @@ else {
                 'errors' => $errors,
                 'lot' => $_POST,
             ]);
-            var_dump($errors);
+//            var_dump($errors);
         } else {
             // При изначальном добавлении лота $cur_price = $price у меня
             $formatted_cur_price = formattedPrice($_POST['cur_price']); //Отформатированная цена для публикации на странице
@@ -116,7 +115,7 @@ else {
 
             $name = $_POST['lot_name'];
             $lot_message = $_POST['lot_message'];
-            $img_url = $_POST['img_url'];
+            $img_url = $_SESSION['uploaded_file'];
             $lot_step = $_POST['lot_step'];
             $category = $_POST['category'];
             $cur_price = $_POST['cur_price'];
@@ -124,7 +123,6 @@ else {
 
             // Преобразование даты из формата 11.11.2024 в формат 2024-11-11 для БД
             $originalDate = $_POST['lot_date'];
-
             $lot_date = $_POST['lot_date'];
 
             // Поиск айди пользователя
@@ -139,8 +137,6 @@ else {
             $stmt-> bind_param('s', $category);
             $stmt->execute();
             $result1 = $stmt->get_result();
-
-            // $result1 = mysqli_query($con, $query1);
 
             if ($result1 && mysqli_num_rows($result1) > 0) {
                 $row = mysqli_fetch_assoc($result1);
@@ -160,12 +156,15 @@ else {
 
                     // Переадресация на страницу с созданным лотом
                     header("Location: show_lot.php?id=" . $last_id);
+                    unset($_SESSION['uploaded_file']);
                     exit();
                 } else {
                     echo "Ошибка добавления лота: " . mysqli_error($con);
                 }
             }
         }
+        // Обработка успешной формы
+        // Удалите временный файл из сессии, если больше не нужен
 
     }
 
@@ -176,5 +175,4 @@ else {
     ]);
 
     print_r($layout_content);
-
 }

@@ -74,10 +74,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors['avatar'] = 'Файл не является допустимым изображением.';
         }
 
+        // Занимаемся перемещением файла
         $file_name = $_FILES['avatar']['name'];
         $file_path = __DIR__ . '/img/avatars/';
         $file_url = '/img/avatars/' . $file_name;
         $tmp_name = $_FILES['avatar']['tmp_name'];
+
+
 
         if (!count($errors)) {
             move_uploaded_file($tmp_name, $file_path . $file_name);
@@ -86,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "Файл не был загружен.";
     }
-
 
 //Если после проверок нет ошибок, то показываем определенную страницу
     if (!count($errors)) {

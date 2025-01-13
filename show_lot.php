@@ -117,7 +117,6 @@ if (isset($_GET['id'])) {
 
             $result = $stmt2->get_result();
             $row = mysqli_fetch_assoc($result);
-
         }
 
 # Количество ставок, сделанных по лоту
@@ -130,8 +129,6 @@ if (isset($_GET['id'])) {
         $stmt3->execute();
 
         $count_rates = $stmt3->get_result();
-
-        $count_rates = mysqli_query($con, $sql_count_rates);
 
         if ($count_rates) {
             $count_rows = mysqli_fetch_assoc($count_rates);
