@@ -26,9 +26,15 @@ if (isset($_GET['id'])) {
     $query = "SELECT lot.id, lot.name, lot_message, img_url, lot_rate, lot_date, lot_step, lot.price, cur_price, category.name AS category_name
        FROM `lot`
        JOIN category ON lot.category_id = category.id
-       WHERE lot.id = '$lot_id'";
+       WHERE lot.id = ?";
 
-    $chosen_lot = mysqli_query($con, $query);
+    $stmt = $con->prepare($query);
+    $stmt->bind_param('i', $lot_id);
+    $stmt->execute();
+
+    $chosen_lot = $stmt->get_result();
+
+//    $chosen_lot = mysqli_query($con, $query);
 
     if ($chosen_lot && mysqli_num_rows($chosen_lot) > 0) {
         foreach ($chosen_lot as $row => $elem) {
@@ -103,9 +109,13 @@ if (isset($_GET['id'])) {
             $query_search_user = "SELECT lot.id, user_id, users.id, users.name, users.contacts
            FROM lot
            JOIN users ON lot.user_id = users.id
-           WHERE lot.id = '$current_id' ";
+           WHERE lot.id = ? ";
 
-            $result = mysqli_query($con, $query_search_user);
+            $stmt2 = $con->prepare($query_search_user);
+            $stmt2->bind_param('i', $current_id);
+            $stmt2->execute();
+
+            $result = $stmt2->get_result();
             $row = mysqli_fetch_assoc($result);
 
         }
@@ -113,7 +123,13 @@ if (isset($_GET['id'])) {
 # Количество ставок, сделанных по лоту
         $sql_count_rates = "SELECT COUNT(*) as count
                    FROM rate
-                   WHERE lot_id = '$lot_id';";
+                   WHERE lot_id = ?;";
+
+        $stmt3 = $con->prepare($sql_count_rates);
+        $stmt3->bind_param('i', $lot_id);
+        $stmt3->execute();
+
+        $count_rates = $stmt3->get_result();
 
         $count_rates = mysqli_query($con, $sql_count_rates);
 
@@ -150,8 +166,7 @@ if (isset($_GET['id'])) {
         http_response_code(404);
         $page_content = '<h1>Ошибка 404: Страница не найдена</h1>';
     }
-}
-else {
+} else {
     $page_content = '<h1>Вы не выбрали лот.</h1>';
 }
 $layout_content = include_template('layout.php', [

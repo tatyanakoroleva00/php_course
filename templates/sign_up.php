@@ -1,7 +1,3 @@
-<?php
-print_r($errors['image']);
-?>
-
 <form class="form container form--invalid" action="../sign_up.php" method="post" autocomplete="off" enctype="multipart/form-data">
     <span class="form__error form__error--bottom"><?=  !empty($errors) ? 'Пожалуйста, исправьте ошибки в форме.' : ''?></span>
       <h2>Регистрация нового аккаунта</h2>

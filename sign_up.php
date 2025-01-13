@@ -90,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 //Если после проверок нет ошибок, то показываем определенную страницу
     if (!count($errors)) {
-        print_r($_POST);
         $email = $form['email'];
         $password = $form['password'];
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -104,8 +103,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $img_url = '/img/avatars/avatar.jpg';
         }
 
-        $sql = "INSERT INTO `users` SET `email` = '$email', `password` = '$hashed_password', `name` = '$name', `contacts` = '$message', `avatar` = '$img_url'";
-        $result = mysqli_query($con, $sql);
+        $sql = "INSERT INTO `users` SET `email` = ?, `password` = ?, `name` = ?, `contacts` = ?, `avatar` = ?";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param('sssss', $email, $hashed_password, $name, $message, $img_url);
+        $stmt->execute();
+
+        $result = $stmt -> get_result();
+
         $page_content = include_template('login.php', [
             'login_page' => $login_page,
             'message' => '*Теперь вы можете войти, используя свой email и пароль',
