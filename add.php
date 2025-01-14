@@ -1,11 +1,10 @@
 <?php
 session_start();
-
-require_once 'init.php';
-require_once 'functions.php';
-require_once 'categories.php';
+require_once 'models/init.php';
+require_once 'models/functions.php';
+require_once 'models/categories.php';
 require_once 'vendor/autoload.php';
-require_once 'remove_file.php';
+require_once 'controllers/remove_file.php';
 $title = 'Добавить лот';
 $errors = [];
 
@@ -19,7 +18,7 @@ else {
     /*2*/
     # ЕСЛИ ПОЛЬЗОВАТЕЛЬ АВТОРИЗОВАН и отправка нового лота не совершена
     if (empty($_POST)) {
-        $page_content = include_template('addlotform.php', []);
+        $page_content = include_template('add.php', []);
     } else {
         $required = ['lot_name', 'category', 'lot_message', 'img_url', 'cur_price', 'lot_step', 'lot_date'];
         $dict = [
@@ -103,11 +102,10 @@ else {
 
         # Ошибки в форме.
         if (count($errors)) {
-            $page_content = include_template('addlotform.php', [
+            $page_content = include_template('add.php', [
                 'errors' => $errors,
                 'lot' => $_POST,
             ]);
-//            var_dump($errors);
         } else {
             // При изначальном добавлении лота $cur_price = $price у меня
             $formatted_cur_price = formattedPrice($_POST['cur_price']); //Отформатированная цена для публикации на странице

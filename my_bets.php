@@ -1,8 +1,8 @@
 <?php
-require_once 'functions.php';
-require_once 'categories.php';
-require_once 'init.php';
 session_start();
+require_once 'models/functions.php';
+require_once 'models/categories.php';
+require_once 'models/init.php';
 
 # Найти все мои ставки
 if(isset($_SESSION)) {

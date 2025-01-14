@@ -41,7 +41,7 @@ $add_lot_page = 'add.php';
                     </div>
                     <div class="user-menu__logged">
                         <p><?= $user_name ?></p>
-                        <p><a href="logout.php">Выйти</a></p>
+                        <p><a href="../controllers/logout.php">Выйти</a></p>
                     </div>
 
                 <?php else: ?>
@@ -51,7 +51,7 @@ $add_lot_page = 'add.php';
                             <a href="<?php echo $signup_page;?>">Регистрация</a>
                         </li>
                         <li class="user-menu__item">
-                            <a href="<?= $login_page?>">Вход</a>
+                            <a href="login.php">Вход</a>
                         </li>
                     </ul>
                 <? endif; ?>
@@ -139,7 +139,7 @@ $add_lot_page = 'add.php';
     </div>
 </footer>
 
-<!--<script src="flatpickr.js"></script>-->
-<script src="script.js"></script>
+<!--<script src="js/flatpickr.js"></script>-->
+<script src="js/script.js"></script>
 </body>
 </html>

@@ -1,12 +1,10 @@
 <?php
-require_once 'functions.php';
-require_once 'lots_list.php';
-require_once 'searchUserByEmail.php';
-require_once 'categories.php';
-require_once 'init.php';
-require_once 'vendor/autoload.php';
-
 session_start();
+require_once 'models/functions.php';
+require_once 'controllers/searchUserByEmail.php';
+require_once 'models/categories.php';
+require_once 'models/init.php';
+require_once 'vendor/autoload.php';
 $title = 'Вход';
 
 //Проверка на получение данных из формы

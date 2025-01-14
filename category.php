@@ -1,9 +1,9 @@
 <?php
-require_once 'functions.php';
-require_once 'categories.php';
-require_once 'init.php';
-require_once 'vendor/autoload.php';
 session_start();
+require_once 'models/functions.php';
+require_once 'models/categories.php';
+require_once 'models/init.php';
+require_once 'vendor/autoload.php';
 
 if(isset($_GET['category'])) {
     $category = $_GET['category']; #English

@@ -1,9 +1,9 @@
 <?php
-require_once 'functions.php';
-require_once 'categories.php';
-require_once 'init.php';
-require_once 'vendor/autoload.php';
 session_start();
+require_once 'models/functions.php';
+require_once 'models/categories.php';
+require_once 'models/init.php';
+require_once 'vendor/autoload.php';
 
 if (isset($_GET['id'])) {
     $lot_id = $_GET['id'];
@@ -59,6 +59,7 @@ if (isset($_GET['id'])) {
                 $query = "SELECT lot_rate, cur_price from lot WHERE id = '$lot_id'";
                 $result = mysqli_query($con, $query);
                 $cur_price = $lot_rate;
+
                 $user_id = $_SESSION['user']['id'];
 
                 if ($result && mysqli_num_rows($result) > 0 && ($lot_rate > $lot_step || $lot_rate == $lot_step)) {
@@ -74,20 +75,12 @@ if (isset($_GET['id'])) {
 # Обновление данных по лоту в БД
                     $json_data = mysqli_real_escape_string($con, json_encode($data));
                     $query2 = "UPDATE lot SET lot_rate = '$json_data', cur_price = '$cur_price' WHERE id = '$lot_id'";
-
-//                    if (mysqli_query($con, $query2)) {
-//                        echo "Ставки добавлены";
-//                    header("Location: " . $_SERVER['REQUEST_URI']);
-//                    exit;
-//                    } else {
-//                        echo "Ошибка обновления: " . mysqli_error($con);
-//                    }
+                    $result2 = mysqli_query($con, $query2);
 
 # Добавление данных в таблицу rate
                     $query3 = "INSERT INTO rate (lot_id, price, user_id) VALUES ('$lot_id', '$lot_rate', '$user_id')";
 
                     if (mysqli_query($con, $query3)) {
-//                        echo 'all is ok';
                         header("Location: " . $_SERVER['REQUEST_URI']);
                         exit;
                     } else {

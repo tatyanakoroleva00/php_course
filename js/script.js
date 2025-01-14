@@ -5,7 +5,6 @@ flatpickr('#lot-date', {
   dateFormat: "Y-m-d",
   locale: "ru"
 });
-
 function removeFile() {
   fetch('add.php', {method: POST})
 }

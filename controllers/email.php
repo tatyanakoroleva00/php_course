@@ -1,6 +1,6 @@
 <?php
-require_once 'init.php';
-require_once 'functions.php';
+require_once 'models/init.php';
+require_once 'models/functions.php';
 
 // Получение текущего времени
 $current_time = date('Y-m-d H:i:s');
@@ -28,8 +28,6 @@ mysqli_stmt_execute($stmt);
 
 // Получение результата
 $result = mysqli_stmt_get_result($stmt);
-//$rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-//print_r($rows);
 
 while($row = mysqli_fetch_assoc($result)) {
     $to = $row['email'];

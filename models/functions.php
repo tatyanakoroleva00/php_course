@@ -1,32 +1,27 @@
 <?php
 require_once 'init.php';
-require_once 'vendor/autoload.php';
 
+# Подключаем шаблоны страниц
 function include_template($name, array $data = [])
 {
-    $name = 'templates/' . $name;
+    $name = 'views/' . $name;
     $result = '';
-
     if (!is_readable($name)) {
         return $result;
     }
-
     ob_start();
     extract($data);
     require $name;
-
     $result = ob_get_clean();
-
     return $result;
 }
 
+# Форматируем дату
 function formattedDate($date) {
     date_default_timezone_set('Europe/Moscow');
     $cur_time = time();
     $finish_date = strtotime($date);
     $left_time_in_seconds = $finish_date - $cur_time;
-
-
     $hours = floor($left_time_in_seconds / 3600);
     $minutes = floor(($left_time_in_seconds % 3600) / 60);
 
@@ -36,8 +31,7 @@ function formattedDate($date) {
     return("{$hours}ч : {$minutes}м");
 }
 
-//$expiration_date = formattedDate("11.11.2024");
-
+# Форматируем цену
 function formattedPrice($arg)
 {
     $rounded_number = ceil($arg);
@@ -47,6 +41,7 @@ function formattedPrice($arg)
     }
 }
 
+# Переводим в время в ЧП вид
 function humanReadableTimeDifference($datetime) {
     $timestamp = strtotime($datetime);
     $currentTime = time();

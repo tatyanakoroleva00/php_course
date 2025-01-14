@@ -1,13 +1,12 @@
 <?php
-require_once 'functions.php';
-require_once 'lots_list.php';
-require_once 'searchUserByEmail.php';
-require_once 'categories.php';
-require_once 'init.php';
+session_start();
+require_once 'models/functions.php';
+require_once 'controllers/searchUserByEmail.php';
+require_once 'models/categories.php';
+require_once 'models/init.php';
 require_once 'vendor/autoload.php';
 
 $title = 'Регистрация';
-session_start();
 $login_page = 'login.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -80,14 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $file_url = '/img/avatars/' . $file_name;
         $tmp_name = $_FILES['avatar']['tmp_name'];
 
-
-
         if (!count($errors)) {
             move_uploaded_file($tmp_name, $file_path . $file_name);
             $_POST['img_url'] = "$file_url";
         }
     } else {
-        echo "Файл не был загружен.";
+//        echo "Файл не был загружен.";
     }
 
 //Если после проверок нет ошибок, то показываем определенную страницу

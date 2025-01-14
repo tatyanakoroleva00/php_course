@@ -1,10 +1,9 @@
 <?php
-require_once 'init.php';
-require_once 'functions.php';
-require_once 'email.php';
 session_start();
+require_once 'models/init.php';
+require_once 'models/functions.php';
+require_once 'controllers/email.php';
 $title = 'Главная страница';
-
 $i = 0;
 
 # -----------------ВСЕ КАТЕГОРИИ
