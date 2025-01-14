@@ -34,8 +34,6 @@ if (isset($_GET['id'])) {
 
     $chosen_lot = $stmt->get_result();
 
-//    $chosen_lot = mysqli_query($con, $query);
-
     if ($chosen_lot && mysqli_num_rows($chosen_lot) > 0) {
         foreach ($chosen_lot as $row => $elem) {
             $lot_name = $elem['name'];
@@ -77,13 +75,13 @@ if (isset($_GET['id'])) {
                     $json_data = mysqli_real_escape_string($con, json_encode($data));
                     $query2 = "UPDATE lot SET lot_rate = '$json_data', cur_price = '$cur_price' WHERE id = '$lot_id'";
 
-                    if (mysqli_query($con, $query2)) {
+//                    if (mysqli_query($con, $query2)) {
 //                        echo "Ставки добавлены";
 //                    header("Location: " . $_SERVER['REQUEST_URI']);
 //                    exit;
-                    } else {
+//                    } else {
 //                        echo "Ошибка обновления: " . mysqli_error($con);
-                    }
+//                    }
 
 # Добавление данных в таблицу rate
                     $query3 = "INSERT INTO rate (lot_id, price, user_id) VALUES ('$lot_id', '$lot_rate', '$user_id')";
@@ -104,7 +102,6 @@ if (isset($_GET['id'])) {
 # Ищем контактные данные разместившего лот
         if (isset($_GET)) {
             $current_id = $_GET['id'];
-//            echo $current_id;
 
             $query_search_user = "SELECT lot.id, user_id, users.id, users.name, users.contacts
            FROM lot
