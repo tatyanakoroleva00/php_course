@@ -127,6 +127,21 @@ if (isset($_GET['id'])) {
             $rates_number = 0;
         }
 
+        # История торгов
+        $query5 = "SELECT rate.rate_date, rate.lot_id, rate.price, users.name AS users_name, lot.name AS lot_name
+                FROM rate
+                INNER JOIN users ON rate.user_id = users.id
+                JOIN lot ON rate.lot_id = lot.id
+                WHERE rate.lot_id = ?
+                ORDER BY rate.rate_date DESC;";
+
+        $stmt5 = $con->prepare($query5);
+        $stmt5->bind_param('i', $lot_id);
+        $stmt5->execute();
+
+        $result5 = $stmt5->get_result();
+
+
         $page_content = include_template('lot.php', [
             'chosen_lot' => $chosen_lot,
             'lot_name' => $lot_name,
@@ -146,6 +161,7 @@ if (isset($_GET['id'])) {
             'user_id' => $row['user_id'],
             'rates_number' => $rates_number,
             'errors' => $errors['rate'],
+            'result5' => $result5,
         ]);
 
     } # Ошибка добавления лота
