@@ -152,6 +152,15 @@ else {
                     echo 'Лот успешно добавлен!';
                     // Получение ID последней вставленной записи
                     $last_id = mysqli_insert_id($con);
+                    $name = $name . ' #' . $last_id;
+
+                    $query3 = "UPDATE lot
+                    SET name = ?
+                    WHERE lot.id = ?;";
+
+                    $stmt3 = $con->prepare($query3);
+                    $stmt3->bind_param('si', $name, $last_id);
+                    $stmt3->execute();
 
                     // Переадресация на страницу с созданным лотом
                     header("Location: show_lot.php?id=" . $last_id);

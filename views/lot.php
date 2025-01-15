@@ -1,5 +1,5 @@
 <section class="lot-item container">
-    <h2><?= $lot_name ?? ''; ?></h2>
+    <h2><?= $lot_name ?? 'Без имени'; ?></h2>
     <div class="lot-item__content">
         <!--        Left column-->
         <div class="lot-col left">
@@ -7,7 +7,7 @@
                 <div class="lot-item__image">
                     <img src='../<?= $img_url ?? ''; ?>' width="730" height="548" alt="<? $lot_name ?? '' ?>">
                 </div>
-                <p class="lot-item__name"><b style="font-size: 14px;">Наименование:</b> <span><?= $lot_name ?></span>
+                <p class="lot-item__name"><b style="font-size: 14px;">Наименование:</b> <span><?= $lot_name?></span>
                 </p>
                 <p class="lot-item__category"><b style="font-size: 14px;">Категория:</b>
                     <span><?= $category_name; ?></span></p>

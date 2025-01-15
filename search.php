@@ -4,7 +4,8 @@ require_once 'models/functions.php';
 require_once 'models/init.php';
 require_once 'models/categories.php';
 require_once 'vendor/autoload.php';
-$searchQuery = '';
+
+$searchQuery = $_GET['search'] ?? '';
 
 if (isset($_GET['search'])) {
     $searchQuery = $_GET['search'];
@@ -14,7 +15,6 @@ if (isset($_GET['search'])) {
     // Удаляем все пробелы из строки
     $searchQuery = str_replace(' ', '', $searchQuery);
     $searchTerm = '%' . $searchQuery . '%';
-
 
     if (empty($searchQuery)) {
         $page_content = '<h1>Вы ввели пустую строку! </h1>';
@@ -37,12 +37,10 @@ if (isset($_GET['search'])) {
         SELECT COUNT(*)
         FROM lot
         WHERE (name LIKE ? OR lot_message LIKE ?);";
-//        WHERE (name LIKE '%$searchQuery%' OR lot_message LIKE '%$searchQuery%');";
 
         $stmt = $con->prepare($total_sql);
         $stmt->bind_param('ss', $searchTerm, $searchTerm);
         $stmt->execute();
-
         $result = $stmt -> get_result();
         $row = mysqli_fetch_array($result);
         $total_records = $row[0];
@@ -63,8 +61,6 @@ if (isset($_GET['search'])) {
         $stmt2->execute();
 
         $result2 = $stmt2->get_result();
-
-//        $result2 = mysqli_query($con, $sql);
 
         if ($result2 && mysqli_num_rows($result2) > 0) {
 
