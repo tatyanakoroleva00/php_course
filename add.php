@@ -119,6 +119,7 @@ else {
             $cur_price = $_POST['cur_price'];
             $price = $_POST['cur_price'];
 
+
             // Преобразование даты из формата 11.11.2024 в формат 2024-11-11 для БД
             $originalDate = $_POST['lot_date'];
             $lot_date = $_POST['lot_date'];

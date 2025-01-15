@@ -38,7 +38,6 @@
 
                                 $result4 = $stmt4->get_result();
 
-//                                $result4 = mysqli_query($con, $sql);
                                 $row = mysqli_fetch_assoc($result4); ?>
                                 <div>
                                     <p class="rates__title">Добавить ставку</p>

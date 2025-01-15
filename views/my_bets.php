@@ -1,12 +1,10 @@
 <section class="rates container">
     <h2>Мои ставки</h2>
     <table class="rates__list">
-
         <?php
-        foreach ($my_bets as $row => $bet) : ?>
+        foreach ($my_bets as $bet) : ?>
         <?php
             $lot_id = $bet['lot_id'];
-            $cur_time = time();
             $lot_expiration_date = strtotime($bet['lot_date']);
 
             //Лоты, которые еще не истекли
@@ -33,26 +31,10 @@
 
             <? endif; ?>
 
-
-            <!--        победивший лот -->
+            <!--  Выводим победившие лоты -->
         <?php
-            $sql = "
-            SELECT *, rate.user_id
-            FROM rate
-            WHERE rate.lot_id = ?
-            ORDER BY rate_date DESC;";
-
-            $stmt2 = $con->prepare($sql);
-            $stmt2->bind_param('i', $lot_id);
-            $stmt2->execute();
-            $result2 = $stmt2->get_result();
-
-            $last_user_id = mysqli_fetch_assoc($result2);
+            $last_user_id = getLastUserId($con, $lot_id);
             $last_rate_date = strtotime($last_user_id['rate_date']);
-
-            ?>
-
-        <?php
 
             if($lot_expiration_date  - $cur_time < 0 && $last_user_id['user_id'] == $_SESSION['user']['id'] ) : ?>
             <tr class="rates__item rates__item--win">
@@ -105,10 +87,6 @@
 
 
             <? endif; ?>
-
-
         <?php endforeach; ?>
-
-
     </table>
 </section>

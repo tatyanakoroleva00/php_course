@@ -1,8 +1,3 @@
-<?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $textareaContent = isset($_POST['lot_message']) ? $_POST['lot_message'] : '';
-}
-?>
 <form class="form form--add-lot container <?php echo !empty($errors) ? 'form--invalid' : '' ?>" action="../add.php"
       method="post" enctype="multipart/form-data">
     <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
@@ -42,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     <div class="form__item form__item--wide <?php echo isset($errors['lot_message']) ? 'form__item--invalid' : ''; ?>">
         <label for="message">Описание <sup>*</sup></label>
-        <textarea id="message" name="lot_message" placeholder="Напишите описание лота"> <?php echo htmlspecialchars($textareaContent); ?></textarea>
+        <textarea id="message" name="lot_message" placeholder="Напишите описание лота"> <?php echo htmlspecialchars(isset($_POST['lot_message']) ? $_POST['lot_message'] : ''); ?></textarea>
         <span class="form__error"><?php echo isset($errors['lot_message']) ? 'Напишите описание лота' : '' ?></span>
     </div>
     <div>

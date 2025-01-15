@@ -1,15 +1,3 @@
-<?php
-if(isset($_SESSION['user'])) {
-    $user = $_SESSION['user'];
-    $user_name = $user['name'];
-}
-$default_avatar = 'img/avatar.jpg';
-$signup_page = 'sign_up.php';
-$login_page = 'login.php';
-$main_page = '/';
-$add_lot_page = 'add.php';
-?>
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -24,23 +12,23 @@ $add_lot_page = 'add.php';
     <header class="main-header">
         <div class="main-header__container container">
             <h1 class="visually-hidden">YetiCave</h1>
-            <a class="main-header__logo" href="<?=$main_page;?>">
+            <a class="main-header__logo" href="/">
                 <img src="../img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
             </a>
             <form class="main-header__search" method="get" action="search.php" autocomplete="off">
                 <input type="search" name="search" placeholder="Поиск лота" value="<?php echo isset($_GET['search']) ? $_GET['search'] : '';?>">
                 <input class="main-header__search-btn" type="submit" name="find" value="Найти">
             </form>
-            <?php if (isset($_SESSION['user'])) : ?><div><a class="main-header__add-lot button" href="<?=$add_lot_page;?>">Добавить лот</a></div><? endif; ?>
+            <?php if (isset($_SESSION['user'])) : ?><div><a class="main-header__add-lot button" href="add.php">Добавить лот</a></div><? endif; ?>
             <nav class="user-menu">
 
                 <?php if (isset($_SESSION['user'])) : ?>
 
                     <div class="user-menu__image">
-                        <img src='<?=$_SESSION['user']['avatar']; ?>' width="40" height="40" alt="Аватар"/>
+                        <img src='<?=$_SESSION['user']['avatar'] ?? 'img/avatar.jpg'?>' width="40" height="40" alt="Аватар"/>
                     </div>
                     <div class="user-menu__logged">
-                        <p><?= $user_name ?></p>
+                        <p><?= $_SESSION['user']['name'] ?? 'Неизвестный'?></p>
                         <p><a href="../controllers/logout.php">Выйти</a></p>
                     </div>
 
@@ -48,14 +36,13 @@ $add_lot_page = 'add.php';
 
                     <ul class="user-menu__list">
                         <li class="user-menu__item">
-                            <a href="<?php echo $signup_page;?>">Регистрация</a>
+                            <a href="sign_up.php">Регистрация</a>
                         </li>
                         <li class="user-menu__item">
                             <a href="login.php">Вход</a>
                         </li>
                     </ul>
                 <? endif; ?>
-                <!-- здесь должен быть PHP код для показа меню и данных пользователя -->
 
             </nav>
         </div>
@@ -63,7 +50,6 @@ $add_lot_page = 'add.php';
 
     <main class="container">
         <?=$content ?>
-
     </main>
 </div>
 
@@ -138,8 +124,6 @@ $add_lot_page = 'add.php';
         </div>
     </div>
 </footer>
-
-<!--<script src="js/flatpickr.js"></script>-->
 <script src="js/script.js"></script>
 </body>
 </html>

@@ -3,6 +3,7 @@ session_start();
 require_once 'models/functions.php';
 require_once 'models/categories.php';
 require_once 'models/init.php';
+require_once 'controllers/get_last_user_id.php';
 
 # Найти все мои ставки
 if(isset($_SESSION)) {
@@ -30,13 +31,13 @@ if(isset($_SESSION)) {
 
     $result = $stmt->get_result();
 
-//    $result = mysqli_query($con, $sql);
-
     $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $cur_time = time();
 
     $page_content = include_template('my_bets.php', [
         'my_bets' => $result,
         'con' => $con,
+        'cur_time' => $cur_time,
     ]);
 
 } else {
